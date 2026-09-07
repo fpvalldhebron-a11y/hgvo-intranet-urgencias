@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parte de Lesiones - Hospital General del Vallès Oriental</title>
+    <style>
+        :root { --primary: #0056b3; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 20px; color: #222; background-color: #f4f7f6; }
+        .document-box { max-width: 800px; margin: 0 auto; background: white; padding: 35px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
+        .logo-title h1 { margin: 0; font-size: 1.4em; color: var(--primary); }
+        .doc-title { text-align: center; font-size: 1.1em; font-weight: bold; margin: 15px 0; text-transform: uppercase; background: #eef2f5; padding: 8px; border-radius: 4px; }
+        .section-title { font-weight: bold; color: var(--primary); margin-top: 15px; border-bottom: 1px solid #ddd; padding-bottom: 4px; font-size: 0.95em; }
+        .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 8px; }
+        .form-group { display: flex; flex-direction: column; }
+        label { font-size: 0.82em; font-weight: bold; margin-bottom: 2px; color: #444; }
+        input, select, textarea { padding: 7px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.88em; font-family: inherit; }
+        .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
+        .signature-box { border-top: 1px solid #000; text-align: center; padding-top: 8px; font-size: 0.85em; }
+        .no-print { text-align: center; margin-bottom: 20px; }
+        .btn-print { background: var(--primary); color: white; border: none; padding: 12px 24px; font-size: 1em; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        
+        @media print {
+            body { background: white; padding: 0; }
+            .document-box { box-shadow: none; padding: 0; max-width: 100%; }
+            .no-print { display: none; }
+            input, select, textarea { border: none; border-bottom: 1px solid #000; border-radius: 0; background: transparent; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print">
+        <button class="btn-print" onclick="window.print()">🖨️ Imprimir Parte Judicial de Lesiones</button>
+        <a href="dashboard_admisiones.html" style="margin-left: 15px; color: var(--primary);">⬅️ Volver a Admisiones</a>
+    </div>
+
+    <div class="document-box">
+        <div class="header">
+            <div class="logo-title">
+                <h1>🏥 Hospital General del Vallès Oriental</h1>
+                <span>Servicio de Urgencias | Registro Judicial</span>
+            </div>
+            <div style="text-align: right; font-size: 0.8em; color: #666;">
+                <strong>AL JUZGADO DE GUARDIA</strong><br>
+                Granollers / Vallès Oriental
+            </div>
+        </div>
+
+        <div class="doc-title">Parte Médico de Lesiones / Comunicación de Urgencia</div>
+
+        <div class="section-title">1. Datos del Paciente / Lesionado</div>
+        <div class="form-grid-3">
+            <div class="form-group"><label>Nombre y Apellidos:</label><input type="text"></div>
+            <div class="form-group"><label>DNI / Pasaporte / CIP:</label><input type="text"></div>
+            <div class="form-group"><label>Edad / Fecha Nac.:</label><input type="text"></div>
+        </div>
+
+        <div class="section-title">2. Origen del Suceso (según manifestaciones)</div>
+        <div class="form-grid-3">
+            <div class="form-group">
+                <label>Mecanismo:</label>
+                <select>
+                    <option>Presunta Agresión / Violencia</option>
+                    <option>Accidente de Tráfico</option>
+                    <option>Accidente Laboral</option>
+                    <option>Otro / Por determinar</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Fecha y Hora del Suceso:</label><input type="datetime-local"></div>
+            <div class="form-group"><label>Lugar de los Hechos:</label><input type="text" placeholder="Ej. Vía pública, domicilio..."></div>
+        </div>
+
+        <div class="section-title">3. Hallazgos Exploratorios y Lesiones</div>
+        <div class="form-group">
+            <textarea rows="3" placeholder="Descripción detallada de contusiones, heridas, fracturas u otros hallazgos clínicos..."></textarea>
+        </div>
+
+        <div class="section-title">4. Pronóstico Inicial y Destino</div>
+        <div class="form-grid-3">
+            <div class="form-group">
+                <label>Pronóstico:</label>
+                <select><option>Leve</option><option>Menos Grave</option><option>Grave</option><option>Muy Grave / Reservado</option></select>
+            </div>
+            <div class="form-group">
+                <label>Destino:</label>
+                <select><option>Alta a Domicilio</option><option>Ingreso Hospitalario</option><option>Derivación Quirúrgica</option></select>
+            </div>
+            <div class="form-group"><label>Intervención Policial:</label><input type="text" placeholder="Mossos / Policía Local"></div>
+        </div>
+
+        <div class="signature-grid">
+            <div class="signature-box">
+                Sello Oficial del Hospital General del Vallès Oriental
+            </div>
+            <div class="signature-box">
+                Firma del Facultativo Médic/a<br>
+                Nº Colegiado: ________________
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
