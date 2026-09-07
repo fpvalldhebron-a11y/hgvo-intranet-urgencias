@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admisiones de Urgencias - Hospital General del Vallès Oriental</title>
+    <style>
+        :root {
+            --primary-blue: #0056b3;
+            --secondary-blue: #003d80;
+            --bg-color: #f4f7f6;
+            --text-dark: #333;
+            --border-color: #cccccc;
+            --success-green: #2e7d32;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* --- Estilos del Pantalla de Login --- */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 61, 128, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 0.95em;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--secondary-blue);
+        }
+
+        .error-msg {
+            color: #d32f2f;
+            font-size: 0.85em;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* --- Estilos del Portal de Admisiones --- */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        h2, h3 {
+            color: var(--primary-blue);
+            margin-top: 0;
+            border-bottom: 2px solid #eef2f5;
+            padding-bottom: 8px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-right: 10px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .patient-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .patient-table th, .patient-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        .patient-table th {
+            background-color: #f8f9fa;
+        }
+
+        .status-badge {
+            background-color: #fff3e0;
+            color: #e65100;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE INICIO DE SESIÓN (LOGIN) -->
+    <div id="login-overlay">
+        <div class="login-card">
+            <h2>🏥 Admisión Urgencias</h2>
+            <p style="font-size: 0.85em; color: #666; margin-bottom: 20px;">
+                Identificación de Personal Administrativo / Sanitario
+            </p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="user-id">Código de Usuario / DNI:</label>
+                    <input type="text" id="user-id" placeholder="Ej. ADM-4021" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-pass">Clave de Acceso:</label>
+                    <input type="password" id="user-pass" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-submit">Iniciar Sesión</button>
+                <div id="login-error" class="error-msg">Clave o usuario incorrectos. Pruebe con '1234'.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- HEADER DE LA INTRANET -->
+    <header>
+        <div>
+            <a href="index.html" class="nav-link">⬅️ Volver al Inicio</a>
+            <strong style="font-size: 1.2em;">Hospital General del Vallès Oriental</strong>
+            <span style="font-size: 0.9em; opacity: 0.9;">| Portal de Admisiones</span>
+        </div>
+        <div>
+            <span id="profesional-nombre">Sesión no iniciada</span>
+            <button onclick="cerrarSesion()" style="margin-left: 15px; background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container">
+        
+        <!-- FORMULARIO DE REGISTRO DE PACIENTE -->
+        <div class="card">
+            <h2>📝 Alta Administrativa de Paciente</h2>
+            <form id="admission-form">
+                
+                <h3>1. Datos de Identificación</h3>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label for="cip">CIP / Tarjeta Sanitaria (CatSalut):</label>
+                        <input type="text" id="cip" placeholder="Ej. BBBB 1234 5678" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dni">DNI / NIE / Pasaporte:</label>
+                        <input type="text" id="dni" placeholder="Ej. 12345678X">
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-nac">Fecha de Nacimiento:</label>
+                        <input type="date" id="fecha-nac" required>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" placeholder="Nombre completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="primer-apellido">Primer Apellido:</label>
+                        <input type="text" id="primer-apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="segundo-apellido">Segundo Apellido:</label>
+                        <input type="text" id="segundo-apellido">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="telefono">Teléfono de Contacto:</label>
+                        <input type="tel" id="telefono" placeholder="600 000 000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="acompanante">Familiar / Acompañante de Contacto:</label>
+                        <input type="text" id="acompanante" placeholder="Nombre y teléfono del acompañante">
+                    </div>
+                </div>
+
+                <h3>2. Datos de la Demanda y Entrada</h3>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label for="medio-llegada">Medio de Llegada:</label>
+                        <select id="medio-llegada" required>
+                            <option value="Pie">Por su propio pie</option>
+                            <option value="SVB">Ambulancia SVB (Soporte Vital Básico)</option>
+                            <option value="SVA">Ambulancia SVA (Soporte Vital Avanzado)</option>
+                            <option value="Transfer">Derivación / Transfer Hospitalario</option>
+                            <option value="FuerzasSeguridad">Cuerpos de Seguridad / Mossos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="procedencia">Procedencia:</label>
+                        <select id="procedencia">
+                            <option value="Domicilio">Domicilio / Vía Pública</option>
+                            <option value="CAP">CAP (Centro de Atención Primaria)</option>
+                            <option value="CUAP">CUAP</option>
+                            <option value="Residencia">Residencia de Mayores</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sala-asignada">Destino Inicial:</label>
+                        <select id="sala-asignada">
+                            <option value="Sala de Espera General">Sala de Espera General</option>
+                            <option value="Sala de Espera Pediatría">Sala de Espera Pediatría</option>
+                            <option value="Directo a Triaje">Pase Directo a Triaje</option>
+                            <option value="Box Criticos">Pase Directo a Box de Críticos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="motivo">Motivo Principal de Consulta (Relato del paciente):</label>
+                    <textarea id="motivo" rows="2" placeholder="Ej. Dolor torácico de 2 horas de evolución, fiebre alta, traumatismo en tobillo..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" style="background-color: var(--success-green); font-size: 1.1em; margin-top: 10px;">
+                    📋 Registrar Admisión y Enviar a Triaje
+                </button>
+            </form>
+        </div>
+
+        <!-- LISTA DE PACIENTES REGISTRADOS EN ESPERA DE TRIAJE -->
+        <div class="card">
+            <h2>⏳ Pacientes Admitidos Hoy (Pendientes de Triaje)</h2>
+            <table class="patient-table">
+                <thead>
+                    <tr>
+                        <th>Hora Entrada</th>
+                        <th>CIP / DNI</th>
+                        <th>Nombre y Apellidos</th>
+                        <th>Medio Llegada</th>
+                        <th>Motivo Consulta</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-pacientes">
+                    <tr>
+                        <td>11:15</td>
+                        <td>MART800123...</td>
+                        <td>Jordi Martínez Soler</td>
+                        <td>A pie</td>
+                        <td>Cefalea intensa y mareos</td>
+                        <td><span class="status-badge">En Sala de Espera</span></td>
+                    </tr>
+                    <tr>
+                        <td>11:22</td>
+                        <td>GARC920512...</td>
+                        <td>Laura García Rovira</td>
+                        <td>Ambulancia SVB</td>
+                        <td>Sospecha de fractura de muñeca</td>
+                        <td><span class="status-badge">En Sala de Espera</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- SCRIPT DE FUNCIONALIDAD -->
+    <script>
+        // Clave de demostración para iniciar sesión
+        const CLAVE_CORRECTA = "1234";
+
+        // Gestión de Login
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userId = document.getElementById('user-id').value;
+            const userPass = document.getElementById('user-pass').value;
+            const errorMsg = document.getElementById('login-error');
+
+            if (userPass === CLAVE_CORRECTA) {
+                // Login correcto
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('profesional-nombre').textContent = `Usuario: ${userId} (Admisiones)`;
+                errorMsg.style.display = 'none';
+            } else {
+                // Login incorrecto
+                errorMsg.style.display = 'block';
+            }
+        });
+
+        function cerrarSesion() {
+            document.getElementById('login-overlay').style.display = 'flex';
+            document.getElementById('user-pass').value = '';
+            document.getElementById('profesional-nombre').textContent = 'Sesión no iniciada';
+        }
+
+        // Gestión de Registro de Pacientes
+        document.getElementById('admission-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Captura de datos
+            const ahora = new Date();
+            const horaStr = ahora.getHours().toString().padStart(2, '0') + ':' + ahora.getMinutes().toString().padStart(2, '0');
+            const cip = document.getElementById('cip').value;
+            const nombre = document.getElementById('nombre').value + ' ' + document.getElementById('primer-apellido').value;
+            const llegada = document.getElementById('medio-llegada').value;
+            const motivo = document.getElementById('motivo').value;
+
+            // Insertar fila en la tabla
+            const tabla = document.getElementById('lista-pacientes');
+            const nuevaFila = document.createElement('tr');
+            
+            nuevaFila.innerHTML = `
+                <td><strong>${horaStr}</strong></td>
+                <td>${cip}</td>
+                <td>${nombre}</td>
+                <td>${llegada}</td>
+                <td>${motivo}</td>
+                <td><span class="status-badge" style="background-color: #e8f5e9; color: #2e7d32;">Registrado -> A Triaje</span></td>
+            `;
+
+            tabla.prepend(nuevaFila); // Añade el nuevo paciente al principio de la lista
+
+            // Limpiar formulario
+            document.getElementById('admission-form').reset();
+            alert('✅ Paciente registrado con éxito y enviado a la lista de Triaje.');
+        });
+    </script>
+</body>
+</html>
