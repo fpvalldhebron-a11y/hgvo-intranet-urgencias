@@ -3,252 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Urgencias - Hospital General del Vallès Oriental</title>
+    <title>Hospital General del Vallès Oriental | Portal Intranet</title>
     <style>
         :root {
-            --primary-blue: #0056b3;
-            --secondary-blue: #003d80;
-            --bg-color: #f4f7f6;
-            --text-dark: #333;
-            --rojo-triaje: #d32f2f;
-            --naranja-triaje: #f57c00;
-            --amarillo-triaje: #fbc02d;
-            --verde-triaje: #388e3c;
-            --azul-triaje: #1976d2;
+            --primary-blue: #1565c0;
+            --secondary-blue: #0d47a1;
+            --teal-accent: #00838f;
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --border-color: #cfd8dc;
         }
 
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-dark: #e0e0e0;
+            --border-color: #333333;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
-            margin: 0;
             color: var(--text-dark);
+            margin: 0;
+            transition: background 0.3s, color 0.3s;
         }
 
         header {
             background-color: var(--primary-blue);
             color: white;
-            padding: 15px 20px;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        .user-info {
-            font-size: 0.9em;
-            text-align: right;
+        .brand-title h1 { margin: 0; font-size: 1.3em; font-weight: 700; }
+        .brand-title span { font-size: 0.85em; opacity: 0.85; font-weight: 300; }
+
+        .header-controls { display: flex; align-items: center; gap: 15px; }
+
+        .btn-theme-toggle {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         .container {
-            display: grid;
-            grid-template-columns: 3fr 1fr;
-            gap: 20px;
-            padding: 20px;
             max-width: 1400px;
-            margin: auto;
+            margin: 30px auto;
+            padding: 0 20px;
         }
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+        .welcome-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-left: 6px solid var(--primary-blue);
         }
 
-        h2 { 
-            margin-top: 0; 
-            color: var(--primary-blue); 
-            border-bottom: 2px solid #eee; 
-            padding-bottom: 10px; 
-        }
-
-        .btn-grid {
+        .departments-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
         }
 
-        .btn-action {
+        .dept-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            border: none;
-            border-radius: 6px;
-            background-color: #e3f2fd;
-            color: var(--primary-blue);
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.95em;
-            text-decoration: none;
-            box-sizing: border-box;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .dept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .dept-icon { font-size: 2.5em; margin-bottom: 10px; }
+        .dept-title { font-size: 1.2em; font-weight: bold; margin-bottom: 8px; color: var(--primary-blue); }
+        .dept-desc { font-size: 0.9em; color: #666; margin-bottom: 20px; line-height: 1.4; }
+
+        .btn-enter {
+            display: block;
             text-align: center;
-        }
-
-        .btn-action:hover { 
-            background-color: var(--primary-blue); 
-            color: white; 
-        }
-
-        .btn-admision {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .btn-admision:hover {
-            background-color: #2e7d32;
+            background: var(--primary-blue);
             color: white;
-        }
-
-        .btn-sem { 
-            background-color: #ffe0b2; 
-            color: #e65100; 
-        }
-
-        .btn-sem:hover { 
-            background-color: #e65100; 
-            color: white; 
-        }
-
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 15px; 
-        }
-
-        th, td { 
-            text-align: left; 
-            padding: 12px; 
-            border-bottom: 1px solid #ddd; 
-        }
-
-        th { 
-            background-color: #f8f9fa; 
-        }
-
-        .badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
             font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-enter:hover { background: var(--secondary-blue); }
+        .btn-enter.teal { background: var(--teal-accent); }
+        .btn-enter.teal:hover { background: #005662; }
+
+        footer {
+            text-align: center;
+            padding: 20px;
             font-size: 0.85em;
-        }
-
-        .nivel-1 { background-color: var(--rojo-triaje); }
-        .nivel-2 { background-color: var(--naranja-triaje); }
-        .nivel-3 { background-color: var(--amarillo-triaje); }
-
-        .alert-box {
-            background-color: #ffebee;
-            border-left: 5px solid var(--rojo-triaje);
-            padding: 12px;
-            margin-bottom: 15px;
-            border-radius: 0 4px 4px 0;
-        }
-
-        @media (max-width: 900px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
+            color: #777;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div>
-            <h1 style="margin: 0; font-size: 1.5em;">🏥 Hospital General del Vallès Oriental</h1>
-            <span style="font-size: 0.9em; opacity: 0.9;">Intranet - Servicio de Urgencias</span>
+        <div class="brand-title">
+            <h1>Hospital General del Vallès Oriental</h1>
+            <span>Sistema Integrado de Gestión Hospitalaria e Intranet Sanitaria</span>
         </div>
-        <div class="user-info">
-            <strong>Usuario:</strong> Aleix (Tècnic en Emergències Sanitàries)<br>
-            <span id="reloj" style="font-weight: bold; font-size: 1.1em;"></span>
+        <div class="header-controls">
+            <button class="btn-theme-toggle" onclick="toggleTheme()">🌙 Modo Noche</button>
+            <span style="font-size: 0.9em; background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 20px;">Usuario: <strong>Aleix Schneider</strong> (Sanitario)</span>
         </div>
     </header>
 
     <div class="container">
-        <main>
-            <!-- ACCIONES RÁPIDAS -->
-            <div class="card">
-                <h2>Acciones Rápidas</h2>
-                <div class="btn-grid">
-                    <a href="admisiones.html" class="btn-action btn-admision">📋 Admisión de Pacientes</a>
-                    <button class="btn-action" onclick="alert('Redirigiendo a Triaje...')">➕ Nuevo Triaje</button>
-                    <button class="btn-action btn-sem" onclick="alert('Redirigiendo a Recepción SEM...')">🚑 Recepción SEM</button>
-                    <button class="btn-action" onclick="alert('Módulo de Gestión de Boxes en desarrollo')">🛏️ Gestión de Boxes</button>
-                    <button class="btn-action" onclick="alert('Módulo de Protocolos Clínicos en desarrollo')">📄 Protocolos Clínicos</button>
+        
+        <div class="welcome-card">
+            <h2 style="margin-top:0; color: var(--primary-blue);">Acceso a Portales Clínicos y Unidades Asistenciales</h2>
+            <p style="margin-bottom:0;">Seleccione el departamento hospitalario al que desea acceder. Todos los módulos cuentan con registro unificado de pacientes, triaje, historia clínica electrónica simplificada e integración con el Servei Català de la Salut (CatSalut).</p>
+        </div>
+
+        <div class="departments-grid">
+
+            <!-- URGENCIAS PEDIATRÍA -->
+            <div class="dept-card" style="border-top: 4px solid var(--teal-accent);">
+                <div>
+                    <div class="dept-icon">👶</div>
+                    <div class="dept-title" style="color: var(--teal-accent);">Urgencias de Pediatría</div>
+                    <div class="dept-desc">Portal especializado para la atención pediátrica: Triángulo TEP, calculadora de dosis por peso (kg), escalas FLACC/Taussig/Downes, cronómetro RCP PALS y gestión de cunas/boxes.</div>
                 </div>
+                <a href="urgencias_pediatria.html" class="btn-enter teal">Ingresar a Pediatría →</a>
             </div>
 
-            <!-- PANEL DE CONTROL Y PACIENTES EN BOX -->
-            <div class="card">
-                <h2>Estado en Vivo: Pacientes en Box</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Box</th>
-                            <th>Paciente</th>
-                            <th>Motivo</th>
-                            <th>Triaje</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Críticos 1</strong></td>
-                            <td>Anónimo (Varón, ~50a)</td>
-                            <td>Parada Cardiorrespiratoria</td>
-                            <td><span class="badge nivel-1">Nivel I</span></td>
-                            <td>En Reanimación (RCP)</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Box 4</strong></td>
-                            <td>Maria G. L.</td>
-                            <td>Dolor Torácico</td>
-                            <td><span class="badge nivel-2">Nivel II</span></td>
-                            <td>Pendiente Analítica / ECG</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Box 9</strong></td>
-                            <td>Jordi P. M.</td>
-                            <td>Traumatismo extremidad inf.</td>
-                            <td><span class="badge nivel-3">Nivel III</span></td>
-                            <td>Esperando Rayos X</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- ADMISIONES Y TRIAGE GENERAL -->
+            <div class="dept-card" style="border-top: 4px solid #1565c0;">
+                <div>
+                    <div class="dept-icon">🏥</div>
+                    <div class="dept-title">Admisiones y Triaje General</div>
+                    <div class="dept-desc">Gestión de entradas de urgencias adultos, asignación de niveles Manchester, citaciones, derivaciones interhospitalarias e identificación de pacientes.</div>
+                </div>
+                <a href="admisiones.html" class="btn-enter">Ingresar a Admisiones →</a>
             </div>
-        </main>
 
-        <!-- PANEL LATERAL DE AVISOS -->
-        <aside>
-            <div class="card">
-                <h2>Avisos Activos</h2>
-                <div class="alert-box">
-                    <strong>⚠️ PREAVISO SEM:</strong><br>
-                    Soporte Vital Avanzado en camino. <br>
-                    Motivo: Código Ictus.<br>
-                    ETA: 4 minutos. <br>
-                    <em>Preparar Box de Críticos 2 y avisar a Neurología.</em>
+            <!-- UCI / CRÍTICOS -->
+            <div class="dept-card" style="border-top: 4px solid #c62828;">
+                <div>
+                    <div class="dept-icon">🫀</div>
+                    <div class="dept-title" style="color: #c62828;">Unidad de Cuidados Intensivos (UCI)</div>
+                    <div class="dept-desc">Monitorización avanzada de pacientes críticos, perfusiones continuas de vasoactivos, ventilación mecánica y bomba de infusión.</div>
                 </div>
-                <div class="alert-box" style="background-color: #fff3e0; border-color: #ff9800;">
-                    <strong>Mantenimiento:</strong><br>
-                    El Box 7 está fuera de servicio temporalmente por limpieza a fondo.
-                </div>
+                <a href="#" class="btn-enter" style="background: #c62828;" onclick="alert('Módulo UCI en mantenimiento preventivo.')">Ingresar a UCI →</a>
             </div>
-        </aside>
+
+            <!-- HOSPITALIZACIÓN / PLANTAS -->
+            <div class="dept-card" style="border-top: 4px solid #2e7d32;">
+                <div>
+                    <div class="dept-icon">🛋️</div>
+                    <div class="dept-title" style="color: #2e7d32;">Planta de Hospitalización</div>
+                    <div class="dept-desc">Control de camas, evolutivos médicos, pases de visita, administración de medicación diaria e informes de alta.</div>
+                </div>
+                <a href="#" class="btn-enter" style="background: #2e7d32;" onclick="alert('Acceso a Planta habilitado desde terminales de control.')">Ingresar a Planta →</a>
+            </div>
+
+        </div>
+
     </div>
 
+    <footer>
+        Hospital General del Vallès Oriental &copy; 2026 | Sistema Integrado de Salud | Granollers, Barcelona
+    </footer>
+
     <script>
-        function actualizarReloj() {
-            const ahora = new Date();
-            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            document.getElementById('reloj').textContent = ahora.toLocaleDateString('es-ES', opciones);
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
         }
-        setInterval(actualizarReloj, 1000);
-        actualizarReloj();
     </script>
 </body>
 </html>
