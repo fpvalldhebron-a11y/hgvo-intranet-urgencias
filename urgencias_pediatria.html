@@ -3,821 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital General del Vallès Oriental | Urgencias Pediatría (50 Funciones)</title>
+    <title>Hospital General del Vallès Oriental | Urgencias Pediátricas</title>
     <style>
         :root {
-            --primary-teal: #00838f;
-            --secondary-teal: #005662;
-            --bg-color: #f0f7f7;
-            --card-bg: #ffffff;
-            --text-dark: #2c3e50;
-            --border-color: #b2dfdb;
-            --success-green: #2e7d32;
-            --warning-orange: #ef6c00;
-            --danger-red: #c62828;
-            --purple-accent: #6a1b9a;
+            --primary: #006666;
+            --secondary: #004d4d;
+            --accent: #e6f2f2;
+            --text-dark: #333333;
+            --bg-light: #f4f7f6;
         }
-
-        body.dark-mode {
-            --bg-color: #121e1e;
-            --card-bg: #1e2c2c;
-            --text-dark: #e0f2f1;
-            --border-color: #004d40;
-        }
-
-        * { box-sizing: border-box; }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
+            font-family: Arial, sans-serif;
             margin: 0;
-            transition: background 0.3s, color 0.3s;
+            padding: 0;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
         }
-
-        /* CABECERA */
-        header.portal-header {
-            background-color: var(--primary-teal);
+        header {
+            background-color: var(--primary);
             color: white;
-            padding: 12px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .header-left, .header-right { display: flex; align-items: center; gap: 15px; }
-
-        .btn-header {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 0.88em;
-            font-weight: bold;
-        }
-
-        .btn-header:hover { background: rgba(255, 255, 255, 0.3); }
-
-        .container { max-width: 1650px; margin: 20px auto; padding: 0 20px; }
-
-        /* KPIS */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .kpi-card {
-            background: var(--card-bg);
-            padding: 14px 18px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-            border-left: 5px solid var(--primary-teal);
-        }
-
-        .kpi-card.green { border-left-color: var(--success-green); }
-        .kpi-card.orange { border-left-color: var(--warning-orange); }
-        .kpi-card.red { border-left-color: var(--danger-red); }
-        .kpi-card.purple { border-left-color: var(--purple-accent); }
-
-        .kpi-title { font-size: 0.78em; color: #777; font-weight: bold; text-transform: uppercase; }
-        .kpi-value { font-size: 1.6em; font-weight: bold; margin-top: 4px; }
-
-        /* AFOROS */
-        .aforo-panel {
-            background: var(--card-bg);
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 18px;
-        }
-
-        .aforo-item label { font-size: 0.82em; font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 4px; }
-        .progress-bar-bg { background: #e0e0e0; height: 9px; border-radius: 5px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; border-radius: 5px; transition: width 0.3s; }
-
-        /* LAYOUT PRINCIPAL */
-        .main-grid { display: grid; grid-template-columns: 2.2fr 1fr; gap: 20px; }
-        @media (max-width: 1200px) { .main-grid { grid-template-columns: 1fr; } }
-
-        .card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        h2 {
-            color: var(--primary-teal);
-            margin-top: 0;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 8px;
-            font-size: 1.15em;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .section-subtitle { font-size: 0.9em; color: var(--primary-teal); font-weight: bold; margin: 15px 0 10px 0; }
-
-        /* PESTAÑAS */
-        .tab-buttons {
+        .nav-container {
             display: flex;
-            gap: 6px;
-            margin-bottom: 18px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 8px;
+            gap: 5px;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             overflow-x: auto;
         }
-
-        .tab-btn {
-            padding: 8px 13px;
-            border: 1px solid var(--border-color);
-            background: rgba(0,131,143,0.05);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.82em;
-            color: var(--text-dark);
-            white-space: nowrap;
-        }
-
-        .tab-btn.active { background: var(--primary-teal); color: white; border-color: var(--primary-teal); }
-
-        .template-form { display: none; }
-        .template-form.active { display: block; }
-
-        .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-        .form-group { margin-bottom: 10px; }
-        .form-group label { display: block; font-weight: 600; font-size: 0.82em; margin-bottom: 3px; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-size: 0.88em;
-            background: var(--card-bg);
-            color: var(--text-dark);
-        }
-
-        /* TEP BOX */
-        .tep-box { background: rgba(0,131,143,0.08); border: 2px dashed var(--primary-teal); padding: 12px; border-radius: 8px; margin-bottom: 15px; }
-        .tep-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .tep-card { background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); }
-
-        .btn-submit {
-            width: 100%;
-            padding: 10px;
-            background-color: var(--primary-teal);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-
-        /* TABLA DE PACIENTES */
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
-        .data-table th, .data-table td { padding: 8px; border-bottom: 1px solid var(--border-color); text-align: left; }
-        .data-table th { background: rgba(0,131,143,0.1); }
-
-        .badge-status { padding: 3px 6px; border-radius: 4px; font-size: 0.75em; font-weight: bold; color: white; }
-        .badge-estable { background: var(--success-green); }
-        .badge-urgente { background: var(--warning-orange); }
-        .badge-critico { background: var(--danger-red); }
-
-        .btn-action-sm {
-            padding: 4px 7px;
-            font-size: 0.76em;
-            border: none;
+        .nav-tab-btn {
+            background: #f1f3f5;
+            border: 1px solid #dcedc8;
+            padding: 8px 15px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            background: rgba(0,131,143,0.15);
-            color: var(--primary-teal);
-            margin-right: 2px;
+            color: var(--primary);
+            white-space: nowrap;
+            transition: all 0.2s;
         }
-
-        .btn-action-sm:hover { background: var(--primary-teal); color: white; }
-
-        /* MODAL */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; }
-        .modal.active { display: flex; }
-        .modal-content { background: var(--card-bg); width: 90%; max-width: 800px; border-radius: 8px; padding: 22px; max-height: 90vh; overflow-y: auto; }
-
-        .toast { position: fixed; bottom: 20px; right: 20px; background: var(--success-green); color: white; padding: 12px 18px; border-radius: 6px; display: none; z-index: 4000; font-weight: bold; font-size: 0.9em; }
-
-        .calc-result-box { background: rgba(46,125,50,0.1); border: 1px solid var(--success-green); padding: 12px; border-radius: 6px; margin-top: 10px; font-size: 0.88em; }
-
-        /* FLOATING NOTES */
-        .floating-notes { position: fixed; bottom: 15px; left: 15px; z-index: 2000; }
-        .btn-float { background: var(--purple-accent); color: white; border: none; border-radius: 50px; padding: 10px 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
-        @media print {
-            body * { visibility: hidden; }
-            #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
+        .nav-tab-btn:hover, .nav-tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .panel-herramienta {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        .card-header-custom {
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 20px;
+        }
+        .card-header-custom h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .card-body-custom {
+            padding: 20px;
+        }
+        .doc-section-box {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 4px 4px 0;
+        }
+        .btn-github {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .btn-github:hover {
+            background: var(--secondary);
         }
     </style>
 </head>
 <body>
 
-    <!-- CABECERA DE NAVEGACIÓN Y AUDITORÍA -->
-    <header class="portal-header">
-        <div class="header-left">
-            <a class="btn-header" href="index.html">← Intranet General</a>
-            <h1 style="margin:0; font-size: 1.1em;">Hospital General del Vallès Oriental <span style="font-weight: 300;">| Urgencias Pediátricas</span></h1>
-        </div>
-        <div class="header-right">
-            <button class="btn-header" onclick="toggleDarkMode()">🌙 Contraste/Noche (F48)</button>
-            <button class="btn-header" style="background: var(--danger-red);" onclick="activarCodigoAzul()">🚨 Código Azul Pediátrico (F29)</button>
-            <span style="font-size: 0.85em;">Sanitario: <strong>Aleix Schneider</strong></span>
-        </div>
+    <header>
+        <div><strong>Hospital General del Vallès Oriental</strong> | Urgencias Pediátricas</div>
+        <div>Sanitario: Aleix Schneider</div>
     </header>
 
-    <div class="container">
+    <div class="nav-container">
+        <button class="nav-tab-btn active" onclick="mostrarSeccion('triaje', this)">1. Triaje TEP / Manchester</button>
+        <button class="nav-tab-btn" onclick="mostrarSeccion('dospsis', this)">2. Calculadora Dosis & Fluidos</button>
+        <button class="nav-tab-btn" onclick="mostrarSeccion('escalas', this)">3. Escalas (Downes/Taussig/FLACC)</button>
+        <button class="nav-tab-btn" onclick="mostrarSeccion('rcp', this)">4. RCP PALS & Vía Aérea</button>
+        <button class="nav-tab-btn" onclick="mostrarSeccion('boxes', this)">5. Gestión Boxes & Limpieza</button>
+        <button class="nav-tab-btn" onclick="mostrarSeccion('recetas', this)">6. Pauta Domicilio & Recetas</button>
+        <button class="nav-tab-btn" onclick="mostrarSeccion('documentacion', this)" style="background: #e0f2f1; border-color: #00796b;">📋 7. Manual & Protocolos (F48)</button>
+    </div>
 
-        <!-- METRICAS KPI -->
-        <div class="kpi-grid">
-            <div class="kpi-card green">
-                <div class="kpi-title">Reg. Hoy (F49)</div>
-                <div class="kpi-value" id="kpi-registrados">24</div>
+    <div class="main-content">
+        
+        <!-- Panel 1: Triaje (Ejemplo predeterminado visible) -->
+        <div id="seccion-triaje" class="panel-herramienta">
+            <div class="card-header-custom">
+                <h3>Herramientas Asistenciales y Triaje Pediátrico</h3>
             </div>
-            <div class="kpi-card orange">
-                <div class="kpi-title">Pendientes Triaje</div>
-                <div class="kpi-value" id="kpi-pendientes">2</div>
-            </div>
-            <div class="kpi-card red">
-                <div class="kpi-title">Nivel I / II (Críticos)</div>
-                <div class="kpi-value" id="kpi-criticos">1</div>
-            </div>
-            <div class="kpi-card purple">
-                <div class="kpi-title">Lactantes (&lt; 1 Año)</div>
-                <div class="kpi-value" id="kpi-lactantes">6</div>
-            </div>
-            <div class="kpi-card green">
-                <div class="kpi-title">T. Espera Medio (F13/F47)</div>
-                <div class="kpi-value" style="color: var(--success-green);">14 min</div>
+            <div class="card-body-custom">
+                <p>Selecciona una pestaña superior para alternar entre las herramientas de urgencias o consulta el nuevo apartado de documentación clínica.</p>
             </div>
         </div>
 
-        <!-- CONTROL DE AFORO Y BOXES -->
-        <div class="aforo-panel">
-            <div class="aforo-item">
-                <label><span>🧸 Sala Espera Pediátrica (F31):</span> <span>9 / 20 (45%)</span></label>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 45%; background: var(--success-green);"></div></div>
+        <!-- Panel 7: Manual & Protocolos Clínico-Administrativos -->
+        <div id="seccion-documentacion" class="panel-herramienta" style="display: none;">
+            <div class="card-header-custom">
+                <h3>Manual General y Protocolos Clínico-Administrativos - Urgencias Pediátricas</h3>
             </div>
-            <div class="aforo-item">
-                <label><span>👶 Cunas / Boxes Lactantes (F32):</span> <span>1 / 2 Ocupado</span></label>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 50%; background: var(--warning-orange);"></div></div>
-            </div>
-            <div class="aforo-item">
-                <label><span>🛏️ Observación Pediátrica &lt;24h (F35):</span> <span>2 / 4 Camas</span></label>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 50%; background: var(--warning-orange);"></div></div>
-            </div>
-            <div class="aforo-item">
-                <label><span>🚨 Box RCP PALS Pediátrico (F34):</span> <span style="color: var(--success-green);">DISPONIBLE</span></label>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 0%; background: var(--success-green);"></div></div>
-            </div>
-        </div>
+            <div class="card-body-custom">
+                
+                <h4>📑 Resumen del Corpus Técnico del Servicio</h4>
+                <ul>
+                    <li><strong>Ficha de Filiación y Anamnesis:</strong> Control de antecedentes perinatales, somatometría y percentiles[cite: 1].</li>
+                    <li><strong>Triaje TEP (Triángulo de Evaluación Pediátrica):</strong> Evaluación visual rápida basada en Apariencia, Respiración y Circulación[cite: 1].</li>
+                    <li><strong>Dosificación Pediátrica Rápida:</strong> Pautas estándar de peso/kg para Paracetamol, Ibuprofeno y Amoxicilina[cite: 1].</li>
+                    <li><strong>Protocolos de Urgencias:</strong> 
+                        <ul>
+                            <li>Crisis Asmática / Broncoespasmo (Manejo con Salbutamol y corticoides)[cite: 1].</li>
+                            <li>Convulsión Febril (Posición lateral de seguridad y pautas con Midazolam/Diazepam)[cite: 1].</li>
+                            <li>Sepsis / Fiebre sin foco en menores de 3 meses[cite: 1].</li>
+                        </ul>
+                    </li>
+                    <li><strong>Checklist de Seguridad:</strong> Revisión del carro de parada pediátrico (cánulas, tubos endotraqueales y desfibrilador)[cite: 1].</li>
+                </ul>
 
-        <div class="main-grid">
-
-            <!-- COLUMNA IZQUIERDA: PESTAÑAS Y HERRAMIENTAS CLÍNICAS -->
-            <div>
-                <div class="card">
-                    <h2>
-                        <span>👶 Herramientas Asistenciales y Triaje Pediátrico</span>
-                        <button class="btn-action-sm" onclick="cargarCasoSimulado()">🧪 Cargar Caso Simulado (F45)</button>
-                    </h2>
-
-                    <!-- SELECCIÓN DE PESTAÑAS CON LAS 50 FUNCIONES -->
-                    <div class="tab-buttons">
-                        <button class="tab-btn active" onclick="verPestana('triaje', this)">🔺 1. Triaje TEP / Manchester</button>
-                        <button class="tab-btn" onclick="verPestana('calculadora', this)">💊 2. Calculadora Dosis & Fluidos</button>
-                        <button class="tab-btn" onclick="verPestana('escalas', this)">📊 3. Escalas (Downes/Taussig/FLACC)</button>
-                        <button class="tab-btn" onclick="verPestana('pals', this)">⏱️ 4. RCP PALS & Vía Aérea</button>
-                        <button class="tab-btn" onclick="verPestana('infra', this)">🛏️ 5. Gestión Boxes & Limpieza</button>
-                        <button class="tab-btn" onclick="verPestana('recetas', this)">📝 6. Pauta Domicilio & Recetas</button>
-                    </div>
-
-                    <!-- 1. TRIAJE Y TEP -->
-                    <form id="tab-triaje" class="template-form active" onsubmit="guardarPacienteTriaje(event)">
-                        
-                        <div class="section-subtitle">Filiación del Menor y Tutor Legal (F37 / F38)</div>
-                        <div class="form-grid-3">
-                            <div class="form-group"><label>CIP / Tarjeta Sanitaria:</label><input type="text" id="ped-cip" placeholder="Ej. GARC820412001" required></div>
-                            <div class="form-group"><label>Nombre del Menor:</label><input type="text" id="ped-nombre" placeholder="Nombre completo" required></div>
-                            <div class="form-group">
-                                <label>Rango de Edad / Categoría (F6):</label>
-                                <select id="ped-categoria" onchange="actualizarRangosNormales()">
-                                    <option value="lactante">Lactante (<1 año)</option>
-                                    <option value="preescolar" selected>Preescolar (1-5 años)</option>
-                                    <option value="escolar">Escolar (>5 años)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-grid-3">
-                            <div class="form-group"><label>Peso Corporal (kg):</label><input type="number" step="0.1" id="ped-peso" placeholder="12.5" oninput="recalcularTodoDosis()" required></div>
-                            <div class="form-group"><label>Nombre Tutor Legal (F38):</label><input type="text" id="ped-tutor" placeholder="Madre/Padre/Tutor" required></div>
-                            <div class="form-group"><label>Teléfono Contacto:</label><input type="tel" id="ped-tel" placeholder="600000000" required></div>
-                        </div>
-
-                        <div class="section-subtitle">Triángulo de Evaluación Pediátrica (TEP) - Valoración Inicial LADO A-R-C (F1 - F5)</div>
-                        <div class="tep-box">
-                            <div class="tep-grid">
-                                <div class="tep-card">
-                                    <label><strong>👁️ Apariencia (F1):</strong></label>
-                                    <select id="tep-a" onchange="evaluarTEP()">
-                                        <option value="0">Normal (Tono, mirada, consolable)</option>
-                                        <option value="1">Alterada (Irritable, letárgico, llanto débil)</option>
-                                    </select>
-                                </div>
-                                <div class="tep-card">
-                                    <label><strong>🫁 Trabajo Resp. (F2):</strong></label>
-                                    <select id="tep-r" onchange="evaluarTEP()">
-                                        <option value="0">Normal (Sin ruidos ni tiraje)</option>
-                                        <option value="1">Alterado (Estridor, tiraje, aleteo)</option>
-                                    </select>
-                                </div>
-                                <div class="tep-card">
-                                    <label><strong>🩺 Circulación Piel (F3):</strong></label>
-                                    <select id="tep-c" onchange="evaluarTEP()">
-                                        <option value="0">Normal (Color rosado)</option>
-                                        <option value="1">Alterado (Palidez, marmórea, cianosis)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div style="margin-top: 8px; text-align: center; font-weight: bold; font-size: 0.88em;" id="tep-resultado-texto">
-                                Impresión TEP (F4): <span style="color: var(--success-green);">PACIENTE ESTABLE</span>
-                            </div>
-                        </div>
-
-                        <div class="section-subtitle">Constantes Vitales y Triaje Manchester (F5 / F20 / F21 / F24)</div>
-                        <div class="form-grid-3">
-                            <div class="form-group"><label>FC (Lpm):</label><input type="number" id="ped-fc" placeholder="110" required></div>
-                            <div class="form-group"><label>FR (Rpm):</label><input type="number" id="ped-fr" placeholder="24" required></div>
-                            <div class="form-group"><label>SatO2 (%):</label><input type="number" id="ped-sat" placeholder="98" required></div>
-                        </div>
-
-                        <div class="form-grid-3">
-                            <div class="form-group"><label>Temp (°C):</label><input type="number" step="0.1" id="ped-temp" placeholder="38.2" required></div>
-                            <div class="form-group"><label>Relleno Capilar (F21):</label><select id="ped-rc"><option value="<2s">&lt; 2 Segundos (Normal)</option><option value=">2s">&gt; 2 Segundos (Retardado)</option></select></div>
-                            <div class="form-group">
-                                <label>Nivel Manchester (F5):</label>
-                                <select id="ped-manchester">
-                                    <option value="Nivel III - Urgente (Verde)">Nivel III - Urgente (Verde)</option>
-                                    <option value="Nivel II - Muy Urgente (Naranja)">Nivel II - Muy Urgente (Naranja)</option>
-                                    <option value="Nivel I - Resucitación (Rojo)">Nivel I - Resucitación (Rojo)</option>
-                                    <option value="Nivel IV - Menos Urgente (Azul)">Nivel IV - Menos Urgente (Azul)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div class="form-group"><label>Alergias Conocidas (F24):</label><input type="text" id="ped-alergias" placeholder="Sin alergias conocidas / Polen / Amoxicilina..." style="border-color: var(--danger-red);"></div>
-                            <div class="form-group">
-                                <label>Protocolo MASC-PED Sospecha Maltrato (F12):</label>
-                                <select id="ped-masc"><option value="negativo">Negativo / Sin indicadores</option><option value="sospecha">⚠️ Indicadores presentes - Notificar Trabajo Social</option></select>
-                            </div>
-                        </div>
-
-                        <div class="form-group"><label>Motivo de Consulta y Antecedentes:</label><textarea id="ped-motivo" rows="2" placeholder="Describa la clínica principal..." required></textarea></div>
-
-                        <button type="submit" class="btn-submit">💾 Registrar Paciente en Urgencias Pediátricas</button>
-                    </form>
-
-                    <!-- 2. CALCULADORA DE DOSIS Y FLUIDOS -->
-                    <div id="tab-calculadora" class="template-form">
-                        <div class="section-subtitle">Calculadora Ponderal de Fármacos y Sueroterapia (F14 - F22)</div>
-                        
-                        <div class="form-grid-2">
-                            <div class="form-group"><label>Peso del Menor (kg):</label><input type="number" step="0.1" id="calc-peso-global" value="12" oninput="calcularTodoPonderal()"></div>
-                            <div class="form-group">
-                                <label>Seleccionar Fármaco a Calcular:</label>
-                                <select id="calc-farmaco-sel" onchange="calcularTodoPonderal()">
-                                    <option value="paracetamol">Paracetamol (15 mg/kg - 100mg/ml) (F14)</option>
-                                    <option value="ibuprofeno">Ibuprofeno 2% (10 mg/kg - 20mg/ml) (F15)</option>
-                                    <option value="amoxicilina">Amoxicilina (80 mg/kg/día en 3 tomas) (F16)</option>
-                                    <option value="dexametasona">Dexametasona Oral (0.15 mg/kg Laringitis) (F17)</option>
-                                    <option value="salbutamol">Salbutamol Nebulizado (F18)</option>
-                                    <option value="adrenalina">Adrenalina Anafilaxia IM (0.01 mg/kg) (F21)</option>
-                                    <option value="midazolam">Midazolam Crisis Convulsiva Buccal/Nasal (F22)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="calc-result-box" id="res-farmaco-box">
-                            <!-- JS inyectará el cálculo -->
-                        </div>
-
-                        <div class="section-subtitle" style="margin-top: 20px;">Calculadora de Fluidoterapia de Mantenimiento y Expansión Volémica (F19 / F20)</div>
-                        <div class="form-grid-2">
-                            <div style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 6px;">
-                                <strong>💧 Regla 4-2-1 / Holliday-Segar (F19):</strong>
-                                <div id="res-suero-mantenimiento" style="margin-top: 5px; font-weight: bold; color: var(--primary-teal);">12 kg -> 44 ml/h de Suero Glucosalino</div>
-                            </div>
-                            <div style="background: rgba(198,40,40,0.05); padding: 10px; border-radius: 6px;">
-                                <strong>🚨 Bolus Expansión Salino 0.9% (20 ml/kg) (F20):</strong>
-                                <div id="res-bolus-shock" style="margin-top: 5px; font-weight: bold; color: var(--danger-red);">12 kg -> Bolus de 240 ml en 20 min</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3. ESCALAS CLINICAS -->
-                    <div id="tab-escalas" class="template-form">
-                        <div class="section-subtitle">Escalas de Valoración Pediátrica Específicas (F7 - F11)</div>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                            <!-- FLACC -->
-                            <div style="border: 1px solid var(--border-color); padding: 10px; border-radius: 6px;">
-                                <h4 style="margin:0 0 8px 0; color: var(--primary-teal);">👶 Escala FLACC Dolor (0-3 años) (F7)</h4>
-                                <label style="font-size: 0.8em;">Cara, Piernas, Actividad, Llanto, Consolabilidad:</label>
-                                <select id="escala-flacc" onchange="evaluarFlacc()" style="width: 100%; margin-top: 5px;">
-                                    <option value="0">0 - Relajado, expresión serena</option>
-                                    <option value="3">1-3 - Dolor Leve / Muecas ocasionales</option>
-                                    <option value="6">4-6 - Dolor Moderado / Quejumbroso</option>
-                                    <option value="9">7-10 - Dolor Severo / Llanto inconsolable</option>
-                                </select>
-                                <div id="res-flacc" style="font-size: 0.82em; font-weight: bold; margin-top: 5px; color: var(--success-green);">Puntuación: 0 (Sin Dolor)</div>
-                            </div>
-
-                            <!-- DOWNES / WOOD-DOWNES -->
-                            <div style="border: 1px solid var(--border-color); padding: 10px; border-radius: 6px;">
-                                <h4 style="margin:0 0 8px 0; color: var(--primary-teal);">🫁 Escala Wood-Downes Bronquiolitis (F9)</h4>
-                                <select id="escala-downes" onchange="evaluarDownes()" style="width: 100%; margin-top: 5px;">
-                                    <option value="1">1-3 Puntos: Crisis Leve</option>
-                                    <option value="5">4-7 Puntos: Crisis Moderada (Cámara Salbutamol)</option>
-                                    <option value="8">8-14 Puntos: Crisis Grave (Ingreso / UCIP)</option>
-                                </select>
-                                <div id="res-downes" style="font-size: 0.82em; font-weight: bold; margin-top: 5px; color: var(--warning-orange);">Pauta: Salbutamol 4 pulsaciones c/20m</div>
-                            </div>
-
-                            <!-- TAUSSIG -->
-                            <div style="border: 1px solid var(--border-color); padding: 10px; border-radius: 6px;">
-                                <h4 style="margin:0 0 8px 0; color: var(--primary-teal);">🗣️ Escala Taussig Laringitis / Croup (F10)</h4>
-                                <select id="escala-taussig" style="width: 100%; margin-top: 5px;">
-                                    <option value="leve">Leve: Estridor solo con agitación -> Dexametasona oral</option>
-                                    <option value="grave">Grave: Estridor en reposo + Tiraje -> Adrenalina Nebulizada</option>
-                                </select>
-                            </div>
-
-                            <!-- GLASGOW PEDIATRICO -->
-                            <div style="border: 1px solid var(--border-color); padding: 10px; border-radius: 6px;">
-                                <h4 style="margin:0 0 8px 0; color: var(--primary-teal);">🧠 Glasgow Pediátrico (F11)</h4>
-                                <select style="width: 100%; margin-top: 5px;">
-                                    <option value="15">15/15 - Normal (Sonríe, orienta la mirada)</option>
-                                    <option value="12">12-14 - Somnolencia / Irritable</option>
-                                    <option value="8">&lt;8 - Coma / Proteger Vía Aérea</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4. PALS Y VIA AÉREA -->
-                    <div id="tab-pals" class="template-form">
-                        <div class="section-subtitle">Reanimación PALS, Cronómetro RCP y Vía Aérea (F25 - F30)</div>
-                        
-                        <div style="background: #fff3e0; border: 1px solid var(--warning-orange); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-                            <h3 style="margin:0 0 5px 0; color: var(--danger-red);">⏱️ Cronómetro de Reanimación RCP Pediátrica (F25)</h3>
-                            <div id="rcp-timer-display" style="font-size: 2.5em; font-weight: bold; font-family: monospace;">02:00</div>
-                            <div style="margin-top: 8px; display: flex; justify-content: center; gap: 10px;">
-                                <button class="btn-action-sm" style="background: var(--success-green); color: white; padding: 8px 15px;" onclick="iniciarTimerRCP()">▶️ Iniciar Ciclo 2 Min</button>
-                                <button class="btn-action-sm" style="background: var(--danger-red); color: white; padding: 8px 15px;" onclick="detenerTimerRCP()">⏹️ Detener / Reiniciar</button>
-                            </div>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div style="border: 1px solid var(--border-color); padding: 10px; border-radius: 6px;">
-                                <strong>🫁 Calculadora Tubo Endotraqueal TOT (F26):</strong>
-                                <div id="res-tot" style="font-size: 0.88em; margin-top: 5px;">Para 3 años: TOT Nº 4.5 (sin neumotaponamiento) | Profundidad: 13.5 cm</div>
-                            </div>
-                            <div style="border: 1px solid var(--border-color); padding: 10px; border-radius: 6px;">
-                                <strong>🔥 Quemaduras Lund-Browder (F28):</strong>
-                                <div style="font-size: 0.88em; margin-top: 5px;">Ajuste por Edad: Cabeza en Lactante = 18% SC.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 5. INFRAESTRUCTURA Y BOXES -->
-                    <div id="tab-infra" class="template-form">
-                        <div class="section-subtitle">Control de Estado de Boxes y Desinfección (F32 - F36 / F48)</div>
-                        
-                        <div class="form-grid-2">
-                            <div style="border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; background: rgba(46,125,50,0.05);">
-                                <strong>BOX 1 (Lactantes):</strong> <span class="badge-status badge-estable">LIBRE</span> (F32)<br>
-                                <span style="font-size: 0.8em;">Desinfección: <strong style="color: var(--success-green);">VERIFICADA (F48)</strong></span>
-                            </div>
-                            <div style="border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; background: rgba(198,40,40,0.05);">
-                                <strong>BOX 2 (Pediatría General):</strong> <span class="badge-status badge-critico">OCUPADO</span> (F33)<br>
-                                <span style="font-size: 0.8em;">Paciente: MARTÍNEZ, LUCÍA</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 6. PAUTA DOMICILIO Y RECETAS -->
-                    <div id="tab-recetas" class="template-form">
-                        <div class="section-subtitle">Generación de Receta Electrónica e Instrucciones para Tutores (F23 / F42)</div>
-                        
-                        <p style="font-size: 0.88em;">Generar cuadrante de pauta de antitérmicos alternados para la familia:</p>
-                        <div style="background: #e8f5e9; padding: 12px; border-radius: 6px; border: 1px solid #c8e6c9;">
-                            <strong>Pauta Alternante Paracetamol / Ibuprofeno (F23):</strong><br>
-                            - Paracetamol 100mg/ml: 1.8 ml si T > 38.0°C (Cada 8h)<br>
-                            - Ibuprofeno 2%: 6.0 ml si persiste fiebre a las 4 horas.<br>
-                            <button class="btn-action-sm" style="margin-top: 8px;" onclick="alert('Imprimiendo hoja de instrucciones para padres...')">🖨️ Imprimir Hoja para Familia (F42)</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- COLUMNA DERECHA: REGISTRO EN VIVO, LLAMADOR Y EXPORTAR -->
-            <div>
-                <div class="card">
-                    <h2>
-                        <span>📋 Menores Asistidos (F39)</span>
-                        <div>
-                            <button class="btn-action-sm" onclick="exportarCSV()">📊 CSV (F46)</button>
-                        </div>
-                    </h2>
-
-                    <div style="margin-bottom: 10px;">
-                        <input type="text" id="filtro-paciente" placeholder="🔍 Buscar por CIP o Nombre (F39)..." oninput="filtrarPacientes()" style="width: 100%; padding: 6px; font-size: 0.85em; border: 1px solid var(--border-color); border-radius: 4px;">
-                    </div>
-
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Hora</th>
-                                <th>Menor</th>
-                                <th>TEP</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-pacientes-body">
-                            <tr>
-                                <td>15:10</td>
-                                <td>MARTÍNEZ, L. (3a)</td>
-                                <td><span class="badge-status badge-urgente">Dif. Resp.</span></td>
-                                <td>
-                                    <button class="btn-action-sm" onclick="llamarPantalla('MARTÍNEZ, LUCÍA', 'Box 2')">📢 TV (F40)</button>
-                                    <button class="btn-action-sm" onclick="abrirFichaModal('MARTÍNEZ, LUCÍA', '3 años', '14 kg', 'Nivel II')">📄 Ficha (F41)</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>14:45</td>
-                                <td>SOLER, PAU (18m)</td>
-                                <td><span class="badge-status badge-estable">Estable</span></td>
-                                <td>
-                                    <button class="btn-action-sm" onclick="llamarPantalla('SOLER, PAU', 'Box 1')">📢 TV</button>
-                                    <button class="btn-action-sm" onclick="abrirFichaModal('SOLER, PAU', '18 meses', '11 kg', 'Nivel III')">📄 Ficha</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="doc-section-box">
+                    <p><strong>Integración en el repositorio de GitHub:</strong> Este contenido forma parte de la documentación oficial y se sincroniza automáticamente con la estructura del proyecto[cite: 1].</p>
+                    <a href="https://github.com/fpvalldhebron-a11y/hgvo-intranet-urgencias" target="_blank" class="btn-github">Ver Repositorio en GitHub</a>
                 </div>
 
-                <div class="card">
-                    <h2>📚 Pruebas Rápidas & Protocolos (F44)</h2>
-                    <div style="font-size: 0.82em;">
-                        <p><strong>• Test Strep A Rápido:</strong> Positivo -> Amoxicilina 80mg/kg/día.</p>
-                        <p><strong>• Panel Triage VRS/Gripe:</strong> Disponible en Box de Triaje.</p>
-                        <p><strong>• Cánula de Guedel Estimada:</strong> Distancia comisura bucal a ángulo mandibular.</p>
-                    </div>
-                </div>
             </div>
-
         </div>
 
     </div>
-
-    <!-- NOTAS FLOTANTES (F47) -->
-    <div class="floating-notes no-print">
-        <button class="btn-float" onclick="toggleNotas()">📝 Notas Rápidas (F47)</button>
-        <div id="box-notas" style="display:none; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 5px; width: 250px;">
-            <textarea id="texto-notas" rows="4" style="width:100%; font-size:0.8em;" placeholder="Escribe notas evolutivas del turno..."></textarea>
-        </div>
-    </div>
-
-    <!-- MODAL FICHA IMPRIMIBLE CON CÓDIGO BARRAS / PULSERA (F41 / F43) -->
-    <div id="modal-ficha" class="modal">
-        <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary-teal); padding-bottom: 8px;">
-                <h3 style="margin: 0; color: var(--primary-teal);">📄 Ficha Sanitaria e Identificación Pediátrica (F41)</h3>
-                <button onclick="cerrarModal('modal-ficha')" class="no-print" style="border: none; background: none; font-size: 1.5em; cursor: pointer;">&times;</button>
-            </div>
-
-            <div id="printable-area" style="padding: 15px;">
-                <div style="text-align: center; border-bottom: 2px solid #00838f; padding-bottom: 8px; margin-bottom: 12px;">
-                    <h2 style="margin:0; color: #00838f;">HOSPITAL GENERAL DEL VALLÈS ORIENTAL</h2>
-                    <span style="font-weight: bold; font-size: 0.9em;">URGENCIAS DE PEDIATRÍA - TRIAGE OFICIAL</span>
-                </div>
-
-                <p><strong>PACIENTE:</strong> <span id="out-nombre">MARTÍNEZ, LUCÍA</span> | <strong>EDAD:</strong> <span id="out-edad">3 años</span> | <strong>PESO:</strong> <span id="out-peso">14 kg</span></p>
-                <p><strong>NIVEL TRIAJE:</strong> <span id="out-nivel">Nivel II (Muy Urgente)</span> | <strong>FECHA:</strong> <span id="out-fecha">07/09/2026</span></p>
-                <hr>
-                <div style="text-align: center; margin: 15px 0;">
-                    <div style="font-family: monospace; font-size: 1.2em; letter-spacing: 4px; background: #eee; padding: 6px; display: inline-block;">||| | ||||| ||| |||| ||||||| |||</div>
-                    <div style="font-size: 0.75em; color: #555;">CÓDIGO IDENTIFICATIVO PULSERA PEDIÁTRICA (F43)</div>
-                </div>
-            </div>
-
-            <div class="no-print" style="margin-top: 15px; display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="btn-action-sm" style="padding: 8px 15px; background: #666; color: white;" onclick="cerrarModal('modal-ficha')">Cerrar</button>
-                <button class="btn-action-sm" style="padding: 8px 15px; background: var(--primary-teal); color: white;" onclick="window.print()">🖨️ Imprimir Ficha Pediátrica</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="toast" class="toast">✅ Operación realizada con éxito</div>
 
     <script>
-        // JS - LÓGICA DE LAS 50 FUNCIONES
-        let timerRCP = null;
-        let segundosRCP = 120;
-
-        function verPestana(id, btn) {
-            document.querySelectorAll('.template-form').forEach(f => f.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + id).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-        }
-
-        function evaluarTEP() {
-            const a = parseInt(document.getElementById('tep-a').value);
-            const r = parseInt(document.getElementById('tep-r').value);
-            const c = parseInt(document.getElementById('tep-c').value);
-            const sum = a + r + c;
-            const text = document.getElementById('tep-resultado-texto');
-
-            if (sum === 0) {
-                text.innerHTML = 'Impresión TEP (F4): <span style="color: var(--success-green);">PACIENTE ESTABLE</span>';
-            } else if (sum === 1) {
-                text.innerHTML = 'Impresión TEP (F4): <span style="color: var(--warning-orange);">DIFICULTAD RESPIRATORIA / DISFUNCIÓN</span>';
-            } else {
-                text.innerHTML = 'Impresión TEP (F4): <span style="color: var(--danger-red);">🚨 SHOCK / FALLO MULTIORGÁNICO / CRÍTICO</span>';
-            }
-        }
-
-        function calcularTodoPonderal() {
-            const peso = parseFloat(document.getElementById('calc-peso-global').value) || 0;
-            const farmaco = document.getElementById('calc-farmaco-sel').value;
-            const res = document.getElementById('res-farmaco-box');
-
-            if (peso <= 0) { res.innerHTML = "Introduce un peso válido."; return; }
-
-            if (farmaco === 'paracetamol') {
-                const mg = peso * 15;
-                const ml = (mg / 100).toFixed(1);
-                res.innerHTML = `<strong>Paracetamol (100mg/ml):</strong> Dosis: <strong>${mg.toFixed(0)} mg</strong> | Administrar: <strong style="color:var(--danger-red); font-size:1.1em;">${ml} ml</strong> cada 6-8h.`;
-            } else if (farmaco === 'ibuprofeno') {
-                const mg = peso * 10;
-                const ml = (mg / 20).toFixed(1);
-                res.innerHTML = `<strong>Ibuprofeno 2% (20mg/ml):</strong> Dosis: <strong>${mg.toFixed(0)} mg</strong> | Administrar: <strong style="color:var(--danger-red); font-size:1.1em;">${ml} ml</strong> cada 8h.`;
-            } else if (farmaco === 'amoxicilina') {
-                const mgDia = peso * 80;
-                const mlToma = ((mgDia / 50) / 3).toFixed(1);
-                res.innerHTML = `<strong>Amoxicilina (250mg/5ml):</strong> Dosis: <strong>${mgDia.toFixed(0)} mg/día</strong> | 3 tomas de <strong style="color:var(--danger-red); font-size:1.1em;">${mlToma} ml</strong> cada 8h.`;
-            } else if (farmaco === 'dexametasona') {
-                const mg = (peso * 0.15).toFixed(2);
-                res.innerHTML = `<strong>Dexametasona Oral (Laringitis):</strong> Dosis Única: <strong style="color:var(--danger-red); font-size:1.1em;">${mg} mg</strong>.`;
-            } else if (farmaco === 'adrenalina') {
-                const ml = (peso * 0.01).toFixed(2);
-                res.innerHTML = `<strong>Adrenalina 1:1000 IM (Anafilaxia):</strong> Administrar <strong style="color:var(--danger-red); font-size:1.1em;">${ml} ml IM</strong> (máx 0.5ml).`;
-            } else {
-                res.innerHTML = `<strong>Cálculo Ponderal:</strong> Dosis adaptada para ${peso} kg.`;
-            }
-
-            // Mantenimiento 4-2-1
-            let mlH = 0;
-            if (peso <= 10) mlH = peso * 4;
-            else if (peso <= 20) mlH = 40 + (peso - 10) * 2;
-            else mlH = 60 + (peso - 20) * 1;
-
-            document.getElementById('res-suero-mantenimiento').textContent = `${peso} kg -> ${mlH} ml/h de Suero Glucosalino`;
-            document.getElementById('res-bolus-shock').textContent = `${peso} kg -> Bolus de ${peso * 20} ml Salino 0.9% en 20 min`;
-        }
-
-        function guardarPacienteTriaje(e) {
-            e.preventDefault();
-            const nom = document.getElementById('ped-nombre').value;
-            const hora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
-            const tbody = document.getElementById('tabla-pacientes-body');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${hora}</td>
-                <td>${nom.toUpperCase()}</td>
-                <td><span class="badge-status badge-estable">Evaluado</span></td>
-                <td>
-                    <button class="btn-action-sm" onclick="llamarPantalla('${nom}', 'Box 1')">📢 TV</button>
-                    <button class="btn-action-sm" onclick="abrirFichaModal('${nom}', 'Varias', '12 kg', 'Nivel III')">📄 Ficha</button>
-                </td>
-            `;
-            tbody.prepend(tr);
-            mostrarToast("✅ Paciente registrado en Urgencias Pediátricas.");
-            e.target.reset();
-        }
-
-        function llamarPantalla(nombre, box) {
-            mostrarToast(`📢 Llamando a TV: ${nombre} pase al ${box}`);
-        }
-
-        function abrirFichaModal(nombre, edad, peso, nivel) {
-            document.getElementById('out-nombre').textContent = nombre;
-            document.getElementById('out-edad').textContent = edad;
-            document.getElementById('out-peso').textContent = peso;
-            document.getElementById('out-nivel').textContent = nivel;
-            document.getElementById('out-fecha').textContent = new Date().toLocaleDateString();
-            document.getElementById('modal-ficha').classList.add('active');
-        }
-
-        function cerrarModal(id) { document.getElementById(id).classList.remove('active'); }
-
-        function mostrarToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.style.display = 'block';
-            setTimeout(() => { t.style.display = 'none'; }, 3000);
-        }
-
-        function activarCodigoAzul() {
-            alert('🚨 ¡CÓDIGO AZUL PEDIÁTRICO ACTIVADO! Notificando a Equipo PALS, Anestesia y UCI Pediátrica...');
-        }
-
-        function cargarCasoSimulado() {
-            document.getElementById('ped-cip').value = "SIMU990812001";
-            document.getElementById('ped-nombre').value = "POL VALLÈS CANALS";
-            document.getElementById('ped-peso').value = "14.2";
-            document.getElementById('ped-tutor').value = "Marta Canals";
-            document.getElementById('ped-tel').value = "611223344";
-            document.getElementById('ped-fc').value = "145";
-            document.getElementById('ped-fr').value = "38";
-            document.getElementById('ped-sat').value = "93";
-            document.getElementById('ped-temp').value = "38.9";
-            document.getElementById('ped-motivo').value = "Dificultad respiratoria de 6h de evolución, tiraje subcostal y tirón traqueal.";
-            mostrarToast("🧪 Caso simulado cargado correctamente.");
-        }
-
-        function iniciarTimerRCP() {
-            detenerTimerRCP();
-            segundosRCP = 120;
-            timerRCP = setInterval(() => {
-                segundosRCP--;
-                let m = Math.floor(segundosRCP / 60).toString().padStart(2, '0');
-                let s = (segundosRCP % 60).toString().padStart(2, '0');
-                document.getElementById('rcp-timer-display').textContent = `${m}:${s}`;
-                if (segundosRCP <= 0) {
-                    clearInterval(timerRCP);
-                    alert('🔔 ¡FIN DE CICLO DE 2 MINUTOS! Reevaluar ritmo y cambiar reanimador.');
-                }
-            }, 1000);
-        }
-
-        function detenerTimerRCP() {
-            if (timerRCP) clearInterval(timerRCP);
-            document.getElementById('rcp-timer-display').textContent = "02:00";
-        }
-
-        function toggleNotas() {
-            const b = document.getElementById('box-notas');
-            b.style.display = b.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function exportarCSV() {
-            alert('📊 Exportando datos de urgencias pediátricas a CSV...');
-        }
-
-        function filtrarPacientes() {
-            const q = document.getElementById('filtro-paciente').value.toLowerCase();
-            const rows = document.querySelectorAll('#tabla-pacientes-body tr');
-            rows.forEach(r => {
-                r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+        function mostrarSeccion(idSeccion, elementoBtn) {
+            // Ocultar todos los paneles principales
+            document.querySelectorAll('.panel-herramienta').forEach(panel => {
+                panel.style.display = 'none';
             });
-        }
 
-        // Inicializaciones
-        calcularTodoPonderal();
+            // Remover clase active de todos los botones
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Mostrar el panel seleccionado y activar su botón
+            const panelActivo = document.getElementById('seccion-' + idSeccion);
+            if (panelActivo) {
+                panelActivo.style.display = 'block';
+            } else {
+                // Por defecto si no coincide exactamente el ID, muestra triaje o el panel general
+                document.getElementById('seccion-triaje').style.display = 'block';
+            }
+            
+            if (elementoBtn) {
+                elementoBtn.classList.add('active');
+            }
+        }
     </script>
+
 </body>
 </html>
