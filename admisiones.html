@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admisiones de Urgencias - Hospital General del Vallès Oriental</title>
+    <title>Hospital General del Vallès Oriental | Portal de Admisiones</title>
     <style>
         :root {
             --primary-blue: #0056b3;
             --secondary-blue: #003d80;
-            --bg-color: #f4f7f6;
-            --text-dark: #333;
-            --border-color: #cccccc;
+            --bg-color: #f0f4f8;
+            --text-dark: #2c3e50;
+            --border-color: #dcdfe6;
             --success-green: #2e7d32;
+            --warning-orange: #ef6c00;
+            --danger-red: #c62828;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,392 +25,658 @@
             color: var(--text-dark);
         }
 
-        header {
+        /* BARRA SUPERIOR DEL PORTAL */
+        header.portal-header {
             background-color: var(--primary-blue);
             color: white;
-            padding: 15px 20px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
-        /* --- Estilos del Pantalla de Login --- */
-        #login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 61, 128, 0.95);
+        .header-left, .header-right {
             display: flex;
-            justify-content: center;
             align-items: center;
-            z-index: 1000;
+            gap: 15px;
         }
 
-        .login-card {
+        .btn-portal-nav {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.88em;
+            font-weight: bold;
+        }
+
+        .btn-portal-nav:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .btn-logout {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.88em;
+        }
+
+        .container {
+            max-width: 1550px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* METRICAS KPI */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
             background: white;
-            padding: 35px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 380px;
-            text-align: center;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            border-left: 5px solid var(--primary-blue);
         }
 
-        .login-card h2 {
-            color: var(--primary-blue);
+        .kpi-card.green { border-left-color: var(--success-green); }
+        .kpi-card.orange { border-left-color: var(--warning-orange); }
+        .kpi-card.red { border-left-color: var(--danger-red); }
+
+        .kpi-title { font-size: 0.85em; color: #666; font-weight: bold; text-transform: uppercase; }
+        .kpi-value { font-size: 1.8em; font-weight: bold; color: var(--text-dark); margin-top: 5px; }
+
+        /* ESTRUCTURA PRINCIPAL DE 2 COLUMNAS */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
             margin-bottom: 20px;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
+        h2 {
+            color: var(--primary-blue);
+            margin-top: 0;
+            border-bottom: 2px solid #eef2f5;
+            padding-bottom: 8px;
+            font-size: 1.25em;
         }
 
-        .form-group label {
-            display: block;
+        .section-subtitle {
+            font-size: 1em;
+            color: var(--primary-blue);
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+        }
+
+        /* PESTAÑAS TAB */
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
             font-weight: bold;
             font-size: 0.9em;
-            margin-bottom: 5px;
+            color: #555;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
 
+        .tab-btn:hover { background: #e3f2fd; color: var(--primary-blue); }
+        .tab-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        /* FORMULARIO GRID */
+        .template-form { display: none; }
+        .template-form.active { display: block; }
+
+        .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        @media (max-width: 768px) {
+            .form-grid-3, .form-grid-2 { grid-template-columns: 1fr; }
+        }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.85em; margin-bottom: 4px; color: #444; }
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 0.95em;
+            font-size: 0.9em;
         }
 
         .btn-submit {
             width: 100%;
             padding: 12px;
-            background-color: var(--primary-blue);
+            background-color: var(--success-green);
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 1em;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s;
+            font-size: 1em;
+            margin-top: 15px;
+            transition: background 0.2s;
         }
 
-        .btn-submit:hover {
-            background-color: var(--secondary-blue);
-        }
+        .btn-submit:hover { background-color: #1b5e20; }
 
-        .error-msg {
-            color: #d32f2f;
-            font-size: 0.85em;
-            margin-top: 10px;
-            display: none;
-        }
-
-        /* --- Estilos del Portal de Admisiones --- */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-        }
-
-        h2, h3 {
-            color: var(--primary-blue);
-            margin-top: 0;
-            border-bottom: 2px solid #eef2f5;
-            padding-bottom: 8px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            background: rgba(255,255,255,0.2);
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            margin-right: 10px;
-        }
-
-        .nav-link:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .patient-table {
+        /* TABLA Y DOCUMENTOS */
+        .data-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.88em;
             margin-top: 10px;
         }
 
-        .patient-table th, .patient-table td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+        .data-table th, .data-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #eef2f5;
             text-align: left;
-            font-size: 0.9em;
         }
 
-        .patient-table th {
-            background-color: #f8f9fa;
-        }
+        .data-table th { background: #f8f9fa; color: #555; }
 
-        .status-badge {
-            background-color: #fff3e0;
-            color: #e65100;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
+        .btn-action-sm {
+            padding: 4px 8px;
+            font-size: 0.78em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
             font-weight: bold;
+            background: #e3f2fd;
+            color: var(--primary-blue);
+        }
+
+        .btn-action-sm:hover { background: var(--primary-blue); color: white; }
+
+        .doc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            background: #fafafa;
+        }
+
+        .doc-item a {
+            background: var(--primary-blue);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* MODAL DE PULSERA Y ETIQUETAS */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 750px;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .pulsera-banda {
+            border: 2px solid #000;
+            border-radius: 6px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: monospace;
+            background: #fff;
+            margin: 15px 0;
+        }
+
+        .etiquetas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .etiqueta-item {
+            border: 1px solid #444;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.78em;
+            font-family: monospace;
+            background: #fafafa;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success-green);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 6px;
+            display: none;
+            z-index: 4000;
+            font-weight: bold;
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printable-area, #printable-area * { visibility: visible; }
+            #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- PANTALLA DE INICIO DE SESIÓN (LOGIN) -->
-    <div id="login-overlay">
-        <div class="login-card">
-            <h2>🏥 Admisión Urgencias</h2>
-            <p style="font-size: 0.85em; color: #666; margin-bottom: 20px;">
-                Identificación de Personal Administrativo / Sanitario
-            </p>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="user-id">Código de Usuario / DNI:</label>
-                    <input type="text" id="user-id" placeholder="Ej. ADM-4021" required>
-                </div>
-                <div class="form-group">
-                    <label for="user-pass">Clave de Acceso:</label>
-                    <input type="password" id="user-pass" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-submit">Iniciar Sesión</button>
-                <div id="login-error" class="error-msg">Clave o usuario incorrectos. Pruebe con '1234'.</div>
-            </form>
+    <!-- CABECERA PRINCIPAL DEL PORTAL -->
+    <header class="portal-header">
+        <div class="header-left">
+            <a class="btn-portal-nav" href="index.html">← Volver al Inicio</a>
+            <h1 style="margin: 0; font-size: 1.1em; font-weight: bold;">Hospital General del Vallès Oriental <span style="font-weight: normal; opacity: 0.85;">| Portal de Admisiones</span></h1>
         </div>
-    </div>
-
-    <!-- HEADER DE LA INTRANET -->
-    <header>
-        <div>
-            <a href="index.html" class="nav-link">⬅️ Volver al Inicio</a>
-            <strong style="font-size: 1.2em;">Hospital General del Vallès Oriental</strong>
-            <span style="font-size: 0.9em; opacity: 0.9;">| Portal de Admisiones</span>
-        </div>
-        <div>
-            <span id="profesional-nombre">Sesión no iniciada</span>
-            <button onclick="cerrarSesion()" style="margin-left: 15px; background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Cerrar Sesión</button>
+        <div class="header-right">
+            <span style="font-size: 0.9em;">Usuario: <strong>hrt (Admisiones)</strong></span>
+            <a class="btn-logout" href="index.html" style="text-decoration: none;">Cerrar Sesión</a>
         </div>
     </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <div class="container">
-        
-        <!-- FORMULARIO DE REGISTRO DE PACIENTE -->
-        <div class="card">
-            <h2>📝 Alta Administrativa de Paciente</h2>
-            <form id="admission-form">
-                
-                <h3>1. Datos de Identificación</h3>
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="cip">CIP / Tarjeta Sanitaria (CatSalut):</label>
-                        <input type="text" id="cip" placeholder="Ej. BBBB 1234 5678" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="dni">DNI / NIE / Pasaporte:</label>
-                        <input type="text" id="dni" placeholder="Ej. 12345678X">
-                    </div>
-                    <div class="form-group">
-                        <label for="fecha-nac">Fecha de Nacimiento:</label>
-                        <input type="date" id="fecha-nac" required>
-                    </div>
-                </div>
 
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="nombre">Nombre:</label>
-                        <input type="text" id="nombre" placeholder="Nombre completo" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="primer-apellido">Primer Apellido:</label>
-                        <input type="text" id="primer-apellido" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="segundo-apellido">Segundo Apellido:</label>
-                        <input type="text" id="segundo-apellido">
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label for="telefono">Teléfono de Contacto:</label>
-                        <input type="tel" id="telefono" placeholder="600 000 000" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="acompanante">Familiar / Acompañante de Contacto:</label>
-                        <input type="text" id="acompanante" placeholder="Nombre y teléfono del acompañante">
-                    </div>
-                </div>
-
-                <h3>2. Datos de la Demanda y Entrada</h3>
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="medio-llegada">Medio de Llegada:</label>
-                        <select id="medio-llegada" required>
-                            <option value="Pie">Por su propio pie</option>
-                            <option value="SVB">Ambulancia SVB (Soporte Vital Básico)</option>
-                            <option value="SVA">Ambulancia SVA (Soporte Vital Avanzado)</option>
-                            <option value="Transfer">Derivación / Transfer Hospitalario</option>
-                            <option value="FuerzasSeguridad">Cuerpos de Seguridad / Mossos</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="procedencia">Procedencia:</label>
-                        <select id="procedencia">
-                            <option value="Domicilio">Domicilio / Vía Pública</option>
-                            <option value="CAP">CAP (Centro de Atención Primaria)</option>
-                            <option value="CUAP">CUAP</option>
-                            <option value="Residencia">Residencia de Mayores</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="sala-asignada">Destino Inicial:</label>
-                        <select id="sala-asignada">
-                            <option value="Sala de Espera General">Sala de Espera General</option>
-                            <option value="Sala de Espera Pediatría">Sala de Espera Pediatría</option>
-                            <option value="Directo a Triaje">Pase Directo a Triaje</option>
-                            <option value="Box Criticos">Pase Directo a Box de Críticos</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="motivo">Motivo Principal de Consulta (Relato del paciente):</label>
-                    <textarea id="motivo" rows="2" placeholder="Ej. Dolor torácico de 2 horas de evolución, fiebre alta, traumatismo en tobillo..." required></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit" style="background-color: var(--success-green); font-size: 1.1em; margin-top: 10px;">
-                    📋 Registrar Admisión y Enviar a Triaje
-                </button>
-            </form>
+        <!-- PANEL DE METRICAS KPI -->
+        <div class="kpi-grid">
+            <div class="kpi-card green">
+                <div class="kpi-title">Entradas Registradas Hoy</div>
+                <div class="kpi-value" id="kpi-total">42</div>
+            </div>
+            <div class="kpi-card orange">
+                <div class="kpi-title">Pendientes de Triaje</div>
+                <div class="kpi-value" id="kpi-espera">5</div>
+            </div>
+            <div class="kpi-card red">
+                <div class="kpi-title">Pases Directos / Críticos</div>
+                <div class="kpi-value" id="kpi-criticos">3</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Pulseras Impresas</div>
+                <div class="kpi-value" id="kpi-pulseras">42</div>
+            </div>
         </div>
 
-        <!-- LISTA DE PACIENTES REGISTRADOS EN ESPERA DE TRIAJE -->
-        <div class="card">
-            <h2>⏳ Pacientes Admitidos Hoy (Pendientes de Triaje)</h2>
-            <table class="patient-table">
-                <thead>
-                    <tr>
-                        <th>Hora Entrada</th>
-                        <th>CIP / DNI</th>
-                        <th>Nombre y Apellidos</th>
-                        <th>Medio Llegada</th>
-                        <th>Motivo Consulta</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="lista-pacientes">
-                    <tr>
-                        <td>11:15</td>
-                        <td>MART800123...</td>
-                        <td>Jordi Martínez Soler</td>
-                        <td>A pie</td>
-                        <td>Cefalea intensa y mareos</td>
-                        <td><span class="status-badge">En Sala de Espera</span></td>
-                    </tr>
-                    <tr>
-                        <td>11:22</td>
-                        <td>GARC920512...</td>
-                        <td>Laura García Rovira</td>
-                        <td>Ambulancia SVB</td>
-                        <td>Sospecha de fractura de muñeca</td>
-                        <td><span class="status-badge">En Sala de Espera</span></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="main-grid">
+            
+            <!-- FORMULARIO DE ALTA CON PESTAÑAS -->
+            <div>
+                <div class="card">
+                    <h2>📝 Alta Administrativa de Paciente</h2>
+                    
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" onclick="seleccionarPlantilla('estandar', this)">👤 Entrada Estándar (CatSalut)</button>
+                        <button class="tab-btn" onclick="seleccionarPlantilla('anonimo', this)">❓ Paciente Indocumentado</button>
+                        <button class="tab-btn" onclick="seleccionarPlantilla('trafico', this)">🚗 Tráfico / Mutua</button>
+                        <button class="tab-btn" onclick="seleccionarPlantilla('justificante', this)">📄 Justificante</button>
+                    </div>
+
+                    <!-- 1. FORMULARIO ESTÁNDAR -->
+                    <form id="plantilla-estandar" class="template-form active" onsubmit="procesarRegistro(event, 'Estándar')">
+                        <div class="section-subtitle">1. Datos de Identificación</div>
+                        
+                        <div class="form-grid-3">
+                            <div class="form-group">
+                                <label for="est-cip">CIP / Tarjeta Sanitaria (CatSalut):</label>
+                                <input type="text" id="est-cip" placeholder="Ej. BBBB 1234 5678" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="est-dni">DNI / NIE / Pasaporte:</label>
+                                <input type="text" id="est-dni" placeholder="Ej. 12345678X">
+                            </div>
+                            <div class="form-group">
+                                <label for="est-fecha">Fecha de Nacimiento:</label>
+                                <input type="date" id="est-fecha" required>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-3">
+                            <div class="form-group">
+                                <label for="est-nombre">Nombre:</label>
+                                <input type="text" id="est-nombre" placeholder="Nombre completo" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="est-apellido1">Primer Apellido:</label>
+                                <input type="text" id="est-apellido1" placeholder="Primer apellido" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="est-apellido2">Segundo Apellido:</label>
+                                <input type="text" id="est-apellido2" placeholder="Segundo apellido">
+                            </div>
+                        </div>
+
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="est-tel">Teléfono de Contacto:</label>
+                                <input type="tel" id="est-tel" placeholder="600 000 000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="est-acompanante">Familiar / Acompañante de Contacto:</label>
+                                <input type="text" id="est-acompanante" placeholder="Nombre y teléfono del acompañante">
+                            </div>
+                        </div>
+
+                        <div class="section-subtitle">2. Datos de la Demanda y Entrada</div>
+
+                        <div class="form-grid-3">
+                            <div class="form-group">
+                                <label for="est-medio">Medio de Llegada:</label>
+                                <select id="est-medio">
+                                    <option value="Por su propio pie">Por su propio pie</option>
+                                    <option value="Ambulancia SVB">Ambulancia SVB</option>
+                                    <option value="Ambulancia SVA">Ambulancia SVA</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="est-procedencia">Procedencia:</label>
+                                <select id="est-procedencia">
+                                    <option value="Domicilio / Vía Pública">Domicilio / Vía Pública</option>
+                                    <option value="CAP">CAP (Atención Primaria)</option>
+                                    <option value="Residencia">Residencia de Mayores</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="est-destino">Destino Inicial:</label>
+                                <select id="est-destino">
+                                    <option value="Sala de Espera General">Sala de Espera General</option>
+                                    <option value="Sala de Espera Camas">Sala de Espera Camas</option>
+                                    <option value="Box de Reanimación">Box de Reanimación / Críticos</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="est-alergias">Alertas Sanitarias / Alergias:</label>
+                            <input type="text" id="est-alergias" placeholder="Ej. Alergia a Penicilina / Ninguna conocida">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="est-motivo">Motivo Principal de Consulta (Relato del paciente):</label>
+                            <textarea id="est-motivo" rows="2" placeholder="Ej. Dolor torácico de 2 horas de evolución, fiebre alta..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-submit">📋 Registrar Admisión y Generar Pulsera + Etiquetas</button>
+                    </form>
+
+                    <!-- 2. PACIENTE INDOCUMENTADO -->
+                    <form id="plantilla-anonimo" class="template-form" onsubmit="procesarRegistro(event, 'Anónimo')">
+                        <div style="background: #fff3e0; padding: 10px; border-radius: 5px; margin-bottom: 12px; font-size: 0.85em; color: #e65100;">
+                            ⚠️ <strong>Registro Urgente:</strong> Asignación automática de NHC provisional.
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Código Identificador:</label>
+                                <input type="text" id="anon-codigo" value="NN-2026-089" readonly style="background: #eee; font-weight: bold; color: var(--danger-red);">
+                            </div>
+                            <div class="form-group">
+                                <label for="anon-sexo">Sexo Aparente:</label>
+                                <select id="anon-sexo"><option>Varón</option><option>Mujer</option></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="anon-origen">Lugar de Recogida:</label>
+                            <input type="text" id="anon-origen" placeholder="Ej. Vía pública AP-7" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="background-color: var(--danger-red);">🚨 Alta Anónimo + Generar Pulsera Roja</button>
+                    </form>
+
+                    <!-- 3. TRÁFICO / MUTUA -->
+                    <form id="plantilla-trafico" class="template-form" onsubmit="procesarRegistro(event, 'Tráfico / Mutua')">
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="traf-dni">DNI / CIP del Implicado:</label>
+                                <input type="text" id="traf-dni" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="traf-mutua">Aseguradora / Mutua:</label>
+                                <input type="text" id="traf-mutua" placeholder="Ej. Mapfre, Pelayo..." required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit" style="background-color: var(--warning-orange);">🚘 Registrar Tráfico + Pulsera / Etiquetas</button>
+                    </form>
+
+                    <!-- 4. JUSTIFICANTE -->
+                    <form id="plantilla-justificante" class="template-form" action="justificante_asistencia.html" method="GET" target="_blank">
+                        <div class="form-group">
+                            <label for="just-nombre">Nombre y Apellidos Solicitante:</label>
+                            <input type="text" id="just-nombre" name="nombre" placeholder="Nombre completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="just-dni">DNI / CIP:</label>
+                            <input type="text" id="just-dni" name="dni" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="background-color: var(--primary-blue);">🖨️ Imprimir Justificante Oficial</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: TABLA Y DOCUMENTOS FÍSICOS -->
+            <div>
+                <div class="card">
+                    <h2>⏱️ Pacientes Esperando Triaje</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Paciente</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-admisiones">
+                            <tr>
+                                <td>12:02</td>
+                                <td>GARCÍA PÉREZ, M.</td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="abrirModalImpresion('GARCÍA PÉREZ, M.', 'BCN9012345678', '01/01/1980', '12:02', 'Sin alergias')">🪪 Pulsera / Etiquetas</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>11:50</td>
+                                <td>NN-2026-088</td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="abrirModalImpresion('PACIENTE ANÓNIMO', 'NN-2026-088', 'Desconocida', '11:50', 'ALERTA CRÍTICA')">🪪 Pulsera / Etiquetas</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h2>📄 Impresos y Documentos Físicos</h2>
+                    
+                    <div class="doc-item">
+                        <div><strong>Consentimiento Informado</strong></div>
+                        <a href="consentimiento_informado.html" target="_blank">Abrir</a>
+                    </div>
+                    <div class="doc-item">
+                        <div><strong>Alta Voluntaria</strong></div>
+                        <a href="alta_voluntaria.html" target="_blank" style="background-color: var(--danger-red);">Abrir</a>
+                    </div>
+                    <div class="doc-item">
+                        <div><strong>Parte de Lesiones Judicial</strong></div>
+                        <a href="parte_lesiones.html" target="_blank">Abrir</a>
+                    </div>
+                    <div class="doc-item">
+                        <div><strong>Justificante de Asistencia</strong></div>
+                        <a href="justificante_asistencia.html" target="_blank">Abrir</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
 
-    <!-- SCRIPT DE FUNCIONALIDAD -->
+    <!-- VENTANA EMERGENTE (MODAL PULSERA Y ETIQUETAS) -->
+    <div id="modal-impresion" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 8px;">
+                <h3 style="margin: 0; color: var(--primary-blue);">🖨️ Impresión de Pulsera y Etiquetas de Triaje</h3>
+                <button onclick="cerrarModal()" style="border: none; background: none; font-size: 1.5em; cursor: pointer;">&times;</button>
+            </div>
+
+            <div id="printable-area">
+                <h4 style="margin: 10px 0 5px 0;">1. Pulsera Térmica de Identificación:</h4>
+                <div class="pulsera-banda">
+                    <div>
+                        <strong id="p-nombre" style="font-size: 1.1em;">PACIENTE EJEMPLO</strong><br>
+                        <span>CIP/NHC: <strong id="p-cip">1234567890</strong></span> | <span>Entrada: <span id="p-hora">12:00</span></span><br>
+                        <span style="color: var(--danger-red); font-weight: bold;" id="p-alergia">ALERTAS: Sin Alergias</span>
+                    </div>
+                    <div style="text-align: center; border-left: 2px solid #ccc; padding-left: 10px;">
+                        <div style="font-size: 28px; letter-spacing: 3px;">||||| | ||||| ||</div>
+                        <span style="font-size: 0.7em;">*HGVO-2026*</span>
+                    </div>
+                </div>
+
+                <h4 style="margin: 15px 0 5px 0;">2. Etiquetas Adhesivas para Triaje y Analíticas (6x):</h4>
+                <div class="etiquetas-grid" id="grid-etiquetas"></div>
+            </div>
+
+            <div class="no-print" style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn-action-sm" style="padding: 10px 18px; background: #666; color: white;" onclick="cerrarModal()">Cerrar</button>
+                <button class="btn-action-sm" style="padding: 10px 18px; background: var(--primary-blue); color: white;" onclick="window.print()">🖨️ Imprimir Todo</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Clave de demostración para iniciar sesión
-        const CLAVE_CORRECTA = "1234";
+        function seleccionarPlantilla(idPlantilla, elementoBtn) {
+            document.querySelectorAll('.template-form').forEach(f => f.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-        // Gestión de Login
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const userId = document.getElementById('user-id').value;
-            const userPass = document.getElementById('user-pass').value;
-            const errorMsg = document.getElementById('login-error');
-
-            if (userPass === CLAVE_CORRECTA) {
-                // Login correcto
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('profesional-nombre').textContent = `Usuario: ${userId} (Admisiones)`;
-                errorMsg.style.display = 'none';
-            } else {
-                // Login incorrecto
-                errorMsg.style.display = 'block';
-            }
-        });
-
-        function cerrarSesion() {
-            document.getElementById('login-overlay').style.display = 'flex';
-            document.getElementById('user-pass').value = '';
-            document.getElementById('profesional-nombre').textContent = 'Sesión no iniciada';
+            document.getElementById('plantilla-' + idPlantilla).classList.add('active');
+            elementoBtn.classList.add('active');
         }
 
-        // Gestión de Registro de Pacientes
-        document.getElementById('admission-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        function procesarRegistro(event, tipo) {
+            event.preventDefault();
 
-            // Captura de datos
             const ahora = new Date();
             const horaStr = ahora.getHours().toString().padStart(2, '0') + ':' + ahora.getMinutes().toString().padStart(2, '0');
-            const cip = document.getElementById('cip').value;
-            const nombre = document.getElementById('nombre').value + ' ' + document.getElementById('primer-apellido').value;
-            const llegada = document.getElementById('medio-llegada').value;
-            const motivo = document.getElementById('motivo').value;
-
-            // Insertar fila en la tabla
-            const tabla = document.getElementById('lista-pacientes');
-            const nuevaFila = document.createElement('tr');
             
-            nuevaFila.innerHTML = `
+            let nombre = "";
+            let cip = "";
+            let alergias = "";
+
+            if (tipo === 'Estándar') {
+                const nom = document.getElementById('est-nombre').value;
+                const ap1 = document.getElementById('est-apellido1').value;
+                nombre = `${ap1.toUpperCase()}, ${nom.toUpperCase()}`;
+                cip = document.getElementById('est-cip').value || "CATSALUT-PENDIENTE";
+                alergias = document.getElementById('est-alergias').value || "Ninguna";
+            } else if (tipo === 'Anónimo') {
+                cip = document.getElementById('anon-codigo').value;
+                nombre = `PACIENTE ANÓNIMO (${cip})`;
+                alergias = "⚠️ ALERTA: DESCONOCIDO";
+            } else if (tipo === 'Tráfico / Mutua') {
+                cip = document.getElementById('traf-dni').value;
+                nombre = `ACCIDENTADO TRÁFICO / ${document.getElementById('traf-mutua').value.toUpperCase()}`;
+                alergias = "Atención Traumatología";
+            }
+
+            const tabla = document.getElementById('tabla-admisiones');
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
                 <td><strong>${horaStr}</strong></td>
-                <td>${cip}</td>
                 <td>${nombre}</td>
-                <td>${llegada}</td>
-                <td>${motivo}</td>
-                <td><span class="status-badge" style="background-color: #e8f5e9; color: #2e7d32;">Registrado -> A Triaje</span></td>
+                <td>
+                    <button class="btn-action-sm" onclick="abrirModalImpresion('${nombre}', '${cip}', 'N/D', '${horaStr}', '${alergias}')">🪪 Pulsera / Etiquetas</button>
+                </td>
             `;
+            tabla.prepend(fila);
 
-            tabla.prepend(nuevaFila); // Añade el nuevo paciente al principio de la lista
+            document.getElementById('kpi-total').textContent = parseInt(document.getElementById('kpi-total').textContent) + 1;
+            document.getElementById('kpi-pulseras').textContent = parseInt(document.getElementById('kpi-pulseras').textContent) + 1;
 
-            // Limpiar formulario
-            document.getElementById('admission-form').reset();
-            alert('✅ Paciente registrado con éxito y enviado a la lista de Triaje.');
-        });
+            abrirModalImpresion(nombre, cip, "01/01/1985", horaStr, alergias);
+            event.target.reset();
+        }
+
+        function abrirModalImpresion(nombre, cip, fnac, hora, alergia) {
+            document.getElementById('p-nombre').textContent = nombre;
+            document.getElementById('p-cip').textContent = cip;
+            document.getElementById('p-hora').textContent = hora;
+            document.getElementById('p-alergia').textContent = "ALERTAS: " + alergia;
+
+            const grid = document.getElementById('grid-etiquetas');
+            grid.innerHTML = "";
+            for (let i = 1; i <= 6; i++) {
+                grid.innerHTML += `
+                    <div class="etiqueta-item">
+                        <strong>HGVO - TRIAJE URGENCIAS (#${i})</strong><br>
+                        <span>${nombre.substring(0, 22)}</span><br>
+                        <span>CIP: ${cip} | ${hora}</span>
+                        <div style="letter-spacing: 2px;">|||||| |||| |||</div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('modal-impresion').classList.add('active');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal-impresion').classList.remove('active');
+        }
     </script>
 </body>
 </html>
