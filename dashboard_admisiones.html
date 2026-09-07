@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Admisiones - Hospital General del Vallès Oriental</title>
+    <style>
+        :root {
+            --primary-blue: #0056b3;
+            --secondary-blue: #003d80;
+            --bg-color: #f0f4f8;
+            --text-dark: #2c3e50;
+            --border-color: #dcdfe6;
+            --success-green: #2e7d32;
+            --warning-orange: #ef6c00;
+            --danger-red: #c62828;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        header {
+            background-color: var(--secondary-blue);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-back {
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            transition: background 0.2s;
+        }
+
+        .nav-back:hover { background: rgba(255,255,255,0.3); }
+
+        .container {
+            max-width: 1450px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* --- DASHBOARD KPIs --- */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 18px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            border-left: 5px solid var(--primary-blue);
+        }
+
+        .kpi-card.green { border-left-color: var(--success-green); }
+        .kpi-card.orange { border-left-color: var(--warning-orange); }
+        .kpi-card.red { border-left-color: var(--danger-red); }
+
+        .kpi-title { font-size: 0.85em; color: #666; font-weight: bold; text-transform: uppercase; }
+        .kpi-value { font-size: 1.8em; font-weight: bold; color: var(--text-dark); margin-top: 5px; }
+
+        /* --- MAIN LAYOUT --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        h2, h3 {
+            color: var(--primary-blue);
+            margin-top: 0;
+            border-bottom: 2px solid #eef2f5;
+            padding-bottom: 8px;
+            font-size: 1.2em;
+        }
+
+        /* --- SELECCIÓN DE PLANTILLAS (TABS) --- */
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #555;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover { background: #e3f2fd; color: var(--primary-blue); }
+        .tab-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        /* --- FORMULARIOS --- */
+        .template-form { display: none; }
+        .template-form.active { display: block; }
+
+        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.85em; margin-bottom: 4px; color: #444; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--success-green);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover { background-color: #1b5e20; }
+
+        /* --- TABLA DE ADMISIONES Y HERRAMIENTAS --- */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+            margin-top: 10px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eef2f5;
+            text-align: left;
+        }
+
+        .data-table th { background: #f8f9fa; color: #555; }
+
+        .status-pill {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.78em;
+        }
+
+        .pill-espera { background: #fff3e0; color: #e65100; }
+        .pill-triado { background: #e8f5e9; color: #2e7d32; }
+
+        .doc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background: #fafafa;
+        }
+
+        .doc-item button {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <a href="index.html" class="nav-back">⬅️ Inicio Urgencias</a>
+            <h1 style="margin: 0; font-size: 1.3em;">🏥 Hospital General del Vallès Oriental</h1>
+            <span style="opacity: 0.8; font-size: 0.9em;">| Centro de Admisiones y Documentación</span>
+        </div>
+        <div style="font-size: 0.85em;">
+            <strong>Móvil Admisión:</strong> Ext. 4021 | <strong>Operador:</strong> ADM-04
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- DASHBOARD DE METRICAS (KPIs) -->
+        <div class="kpi-grid">
+            <div class="kpi-card green">
+                <div class="kpi-title">Entradas Registradas Hoy</div>
+                <div class="kpi-value" id="kpi-total">42</div>
+            </div>
+            <div class="kpi-card orange">
+                <div class="kpi-title">Pendientes de Triaje</div>
+                <div class="kpi-value" id="kpi-espera">5</div>
+            </div>
+            <div class="kpi-card red">
+                <div class="kpi-title">Pases Directos / Críticos</div>
+                <div class="kpi-value">3</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Justificantes Emitidos</div>
+                <div class="kpi-value">18</div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            
+            <!-- PANEL DE PLANTILLAS DE REGISTRO -->
+            <div>
+                <div class="card">
+                    <h2>📋 Plantillas de Registro de Pacientes</h2>
+                    
+                    <!-- Botones de Pestañas -->
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" onclick="seleccionarPlantilla('estandar', this)">👤 Entrada Estándar (CIP / DNI)</button>
+                        <button class="tab-btn" onclick="seleccionarPlantilla('anonimo', this)">❓ Paciente Indocumentado</button>
+                        <button class="tab-btn" onclick="seleccionarPlantilla('trafico', this)">🚗 Accidente Tráfico / Mutua</button>
+                        <button class="tab-btn" onclick="seleccionarPlantilla('justificante', this)">📄 Justificante Asistencia</button>
+                    </div>
+
+                    <!-- 1. PLANTILLA ESTÁNDAR -->
+                    <form id="plantilla-estandar" class="template-form active" onsubmit="guardarPaciente(event, 'Estándar')">
+                        <div class="form-grid-3">
+                            <div class="form-group">
+                                <label>CIP (CatSalut):</label>
+                                <input type="text" placeholder="BBBB 1234 5678" required>
+                            </div>
+                            <div class="form-group">
+                                <label>DNI / NIE / Pasaporte:</label>
+                                <input type="text" placeholder="12345678X">
+                            </div>
+                            <div class="form-group">
+                                <label>Fecha de Nacimiento:</label>
+                                <input type="date" required>
+                            </div>
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Nombre:</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Apellidos:</label>
+                                <input type="text" required>
+                            </div>
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Teléfono Paciente / Familiar:</label>
+                                <input type="tel" placeholder="600 000 000" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Medio de Entrante:</label>
+                                <select>
+                                    <option>A Pie / Particular</option>
+                                    <option>Ambulancia SVB (CatSalut)</option>
+                                    <option>Ambulancia SVA (Medicalizada)</option>
+                                    <option>Transfer Hospitalario</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Motivo de Consulta:</label>
+                            <textarea rows="2" placeholder="Resumen rápido del motivo..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">✅ Confirmar Admisión y Mandar a Triaje</button>
+                    </form>
+
+                    <!-- 2. PLANTILLA INDOCUMENTADO (ANÓNIMO) -->
+                    <form id="plantilla-anonimo" class="template-form" onsubmit="guardarPaciente(event, 'Indocumentado')">
+                        <div style="background: #fff3e0; padding: 10px; border-radius: 5px; margin-bottom: 12px; font-size: 0.85em; color: #e65100;">
+                            ⚠️ <strong>Registro de Paciente No Identificado:</strong> Se generará un código único temporal (NN) para historia clínica previa a filiación real.
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Código Identificador Asignado:</label>
+                                <input type="text" value="NN-2026-089" readonly style="background: #eee; font-weight: bold;">
+                            </div>
+                            <div class="form-group">
+                                <label>Sexo Estimado:</label>
+                                <select><option>Varón</option><option>Mujer</option><option>Indeterminado</option></select>
+                            </div>
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Edad Aparente:</label>
+                                <input type="text" placeholder="Ej. Aprox 40-45 años">
+                            </div>
+                            <div class="form-group">
+                                <label>Lugar/Origen de Recogida (SEM / Mossos):</label>
+                                <input type="text" placeholder="Ej. Granollers Centre - Vía Pública">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Rasgos Físicos / Vestimenta Notables:</label>
+                            <textarea rows="2" placeholder="Ej. Chaqueta azul, tatuaje en antebrazo derecho..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit" style="background-color: var(--danger-red);">🚨 Alta Código Anónimo (Pase a Box)</button>
+                    </form>
+
+                    <!-- 3. PLANTILLA ACCIDENTE DE TRÁFICO / MUTUA -->
+                    <form id="plantilla-trafico" class="template-form" onsubmit="guardarPaciente(event, 'Accidente Tráfico')">
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>DNI / CIP del Conductor/Ocupante:</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Aseguradora del Vehículo / Mutua Laboral:</label>
+                                <input type="text" placeholder="Ej. Mapfre, Mutua Universal..." required>
+                            </div>
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Matrícula del Vehículo Implicado:</label>
+                                <input type="text" placeholder="1234-BBB">
+                            </div>
+                            <div class="form-group">
+                                <label>Nº de Atestado / Policía Local / Mossos:</label>
+                                <input type="text" placeholder="Atestado nº...">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit" style="background-color: var(--warning-orange);">🚘 Registrar Entrada de Tráfico / Mutua</button>
+                    </form>
+
+                    <!-- 4. PLANTILLA JUSTIFICANTE ASISTENCIA -->
+                    <div id="plantilla-justificante" class="template-form">
+                        <div class="form-group">
+                            <label>DNI / CIP del Paciente o Acompañante:</label>
+                            <input type="text" id="just-dni" placeholder="Buscar paciente en sistema...">
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre del Solicitante (Acompañante / Familiar):</label>
+                            <input type="text" placeholder="Nombre completo">
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Hora Entrada:</label>
+                                <input type="time" value="10:30">
+                            </div>
+                            <div class="form-group">
+                                <label>Hora Salida / Actual:</label>
+                                <input type="time" value="12:15">
+                            </div>
+                        </div>
+                        <button type="button" class="btn-submit" onclick="imprimirJustificante()" style="background-color: var(--primary-blue);">🖨️ Generar e Imprimir Justificante Oficial (PDF)</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- LATERAL: REGISTRO RECIENTE Y PLANTILLAS DESCARGABLES -->
+            <div>
+                <!-- TABLA DE ENTRADAS RECIENTES -->
+                <div class="card">
+                    <h2>⏱️ Pacientes en Espera de Triaje</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Nombre / CIP</th>
+                                <th>Tipo</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-admisiones">
+                            <tr>
+                                <td>12:02</td>
+                                <td>GARCÍA, M. (CatSalut)</td>
+                                <td>Estándar</td>
+                                <td><span class="status-pill pill-espera">En espera</span></td>
+                            </tr>
+                            <tr>
+                                <td>11:50</td>
+                                <td>NN-2026-088</td>
+                                <td>Anónimo</td>
+                                <td><span class="status-pill pill-triado">En Triaje</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- DOCUMENTOS Y FORMULARIOS IMPRESOS -->
+                <div class="card">
+                    <h2>📄 Impresos y Documentos Físicos</h2>
+                    
+                    <div class="doc-item">
+                        <div>
+                            <strong>Consentimiento Informado</strong><br>
+                            <small style="color: #666;">Ingreso / Tratamientos Urgentes</small>
+                        </div>
+                        <button onclick="alert('Abriendo plantilla de Consentimiento Informado...')">Imprimir</button>
+                    </div>
+
+                    <div class="doc-item">
+                        <div>
+                            <strong>Hoja de Alta Voluntaria</strong><br>
+                            <small style="color: #666;">Documento oficial de renuncia</small>
+                        </div>
+                        <button onclick="alert('Abriendo Hoja de Alta Voluntaria...')">Imprimir</button>
+                    </div>
+
+                    <div class="doc-item">
+                        <div>
+                            <strong>Ficha de Denuncia Judicial</strong><br>
+                            <small style="color: #666;">Partes de lesiones / Agresiones</small>
+                        </div>
+                        <button onclick="alert('Abriendo Parte de Lesiones Judicial...')">Imprimir</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPT DE INTERACTIVIDAD -->
+    <script>
+        // Cambiar entre pestañas de plantillas
+        function seleccionarPlantilla(idPlantilla, elementoBtn) {
+            // Ocultar todos los formularios
+            const formularios = document.querySelectorAll('.template-form');
+            formularios.forEach(f => f.classList.remove('active'));
+
+            // Desactivar botones
+            const botones = document.querySelectorAll('.tab-btn');
+            botones.forEach(b => b.classList.remove('active'));
+
+            // Activar la seleccionada
+            document.getElementById('plantilla-' + idPlantilla).classList.add('active');
+            elementoBtn.classList.add('active');
+        }
+
+        // Guardar paciente en la tabla rápida
+        function guardarPaciente(event, tipoRegistro) {
+            event.preventDefault();
+            
+            const ahora = new Date();
+            const horaStr = ahora.getHours().toString().padStart(2, '0') + ':' + ahora.getMinutes().toString().padStart(2, '0');
+            
+            const tabla = document.getElementById('tabla-admisiones');
+            const nuevaFila = document.createElement('tr');
+
+            nuevaFila.innerHTML = `
+                <td>${horaStr}</td>
+                <td>NUEVO REGISTRO</td>
+                <td>${tipoRegistro}</td>
+                <td><span class="status-pill pill-espera">En espera</span></td>
+            `;
+
+            tabla.prepend(nuevaFila);
+
+            // Actualizar KPIs
+            const total = document.getElementById('kpi-total');
+            const espera = document.getElementById('kpi-espera');
+            total.textContent = parseInt(total.textContent) + 1;
+            espera.textContent = parseInt(espera.textContent) + 1;
+
+            alert('✅ Registro guardado con éxito y enviado a la lista de Triaje.');
+            event.target.reset();
+        }
+
+        function imprimirJustificante() {
+            alert('🖨️ Generando PDF del Justificante de Asistencia con el sello digital del Hospital General del Vallès Oriental...');
+        }
+    </script>
+
+</body>
+</html>
