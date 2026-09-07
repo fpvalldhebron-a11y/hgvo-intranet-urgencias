@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justificante de Asistencia - Hospital General del Vallès Oriental</title>
+    <style>
+        :root { --primary: #0056b3; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 20px; color: #222; background-color: #f4f7f6; }
+        .document-box { max-width: 750px; margin: 0 auto; background: white; padding: 35px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
+        .logo-title h1 { margin: 0; font-size: 1.3em; color: var(--primary); }
+        .doc-title { text-align: center; font-size: 1.1em; font-weight: bold; margin: 25px 0; text-transform: uppercase; background: #f8f9fa; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .form-group { display: flex; flex-direction: column; }
+        label { font-size: 0.85em; font-weight: bold; margin-bottom: 4px; color: #444; }
+        input, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; font-family: inherit; }
+        .cert-text { font-size: 0.95em; line-height: 1.6; margin: 25px 0; text-align: justify; }
+        .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+        .signature-box { border-top: 1px solid #000; text-align: center; padding-top: 8px; font-size: 0.85em; }
+        .no-print { text-align: center; margin-bottom: 20px; }
+        .btn-print { background: var(--primary); color: white; border: none; padding: 12px 24px; font-size: 1em; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        
+        @media print {
+            body { background: white; padding: 0; }
+            .document-box { box-shadow: none; padding: 0; max-width: 100%; }
+            .no-print { display: none; }
+            input, select { border: none; border-bottom: 1px solid #000; border-radius: 0; background: transparent; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print">
+        <button class="btn-print" onclick="window.print()">🖨️ Generar Justificante (Imprimir / PDF)</button>
+        <a href="dashboard_admisiones.html" style="margin-left: 15px; color: var(--primary);">⬅️ Volver a Admisiones</a>
+    </div>
+
+    <div class="document-box">
+        <div class="header">
+            <div class="logo-title">
+                <h1>🏥 Hospital General del Vallès Oriental</h1>
+                <span>Servicio de Admisión de Urgencias</span>
+            </div>
+            <div style="text-align: right; font-size: 0.8em; color: #666;">
+                Nº Registro: JUS-<span id="num-reg">4092</span>
+            </div>
+        </div>
+
+        <div class="doc-title">Justificante Oficial de Asistencia Sanitaria</div>
+
+        <div class="cert-text">
+            El Servicio de Admisión del <strong>Hospital General del Vallès Oriental</strong> CERTIFICA que la persona que se reseña a continuación ha permanecido en el Área de Urgencias de este centro hospitalario:
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>En calidad de:</label>
+                <select><option>Paciente atendido/a</option><option>Acompañante principal de paciente</option></select>
+            </div>
+            <div class="form-group"><label>Nombre y Apellidos:</label><input type="text" placeholder="Nombre de la persona interesada"></div>
+            <div class="form-group"><label>DNI / NIE / CIP:</label><input type="text" placeholder="Documento de identidad"></div>
+            <div class="form-group"><label>Nombre del Paciente (si es acompañante):</label><input type="text" placeholder="Familiar o allegado"></div>
+        </div>
+
+        <div class="form-grid" style="margin-top: 15px;">
+            <div class="form-group"><label>Fecha de Asistencia:</label><input type="date"></div>
+            <div class="form-group"><label>Hora de Entrada:</label><input type="time" value="08:30"></div>
+            <div class="form-group"><label>Hora de Salida / Alta:</label><input type="time" value="12:45"></div>
+        </div>
+
+        <p style="font-size: 0.85em; color: #555; margin-top: 25px;">
+            Y para que conste y surta los efectos oportunos ante la empresa, centro educativo u organismo que corresponda, se expide el presente justificante con la fecha actual.
+        </p>
+
+        <div class="signature-grid">
+            <div class="signature-box">
+                Sello del Servicio de Admisión y Urgencias
+            </div>
+            <div class="signature-box">
+                Firma del Administrativo/a de Admisiones<br>
+                Cód. Operador: ADM-4021
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Genera un número correlativo automático para el justificante
+        document.getElementById('num-reg').textContent = Math.floor(100000 + Math.random() * 900000);
+    </script>
+
+</body>
+</html>
