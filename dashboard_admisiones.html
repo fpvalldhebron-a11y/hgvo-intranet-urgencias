@@ -14,6 +14,7 @@
             --success-green: #2e7d32;
             --warning-orange: #ef6c00;
             --danger-red: #c62828;
+            --purple-badge: #6a1b9a;
         }
 
         * { box-sizing: border-box; }
@@ -42,7 +43,7 @@
         }
 
         .container {
-            max-width: 1500px;
+            max-width: 1550px;
             margin: 20px auto;
             padding: 0 20px;
         }
@@ -167,6 +168,10 @@
             font-size: 1em;
             margin-top: 15px;
             transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .btn-submit:hover { background-color: #1b5e20; }
@@ -180,7 +185,7 @@
         }
 
         .data-table th, .data-table td {
-            padding: 10px;
+            padding: 10px 8px;
             border-bottom: 1px solid #eef2f5;
             text-align: left;
         }
@@ -197,6 +202,20 @@
         .pill-espera { background: #fff3e0; color: #e65100; }
         .pill-triado { background: #e8f5e9; color: #2e7d32; }
         .pill-critico { background: #ffebee; color: #c62828; }
+
+        .btn-action-sm {
+            padding: 4px 8px;
+            font-size: 0.78em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 2px;
+            background: #e3f2fd;
+            color: var(--primary-blue);
+        }
+
+        .btn-action-sm:hover { background: var(--primary-blue); color: white; }
 
         /* LISTA DE DOCUMENTOS */
         .doc-item {
@@ -222,6 +241,125 @@
 
         .doc-item a:hover { background: var(--secondary-blue); }
 
+        /* MODAL DE IMPRESIÓN DE PULSERA Y ETIQUETAS */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 750px;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* DISEÑO DE LA PULSERA EN PANTALLA */
+        .pulsera-container {
+            border: 2px dashed #999;
+            background: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .pulsera-banda {
+            background: #ffffff;
+            border: 2px solid #000;
+            border-radius: 6px;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            position: relative;
+        }
+
+        .pulsera-banda::before {
+            content: "PACIENTE URGENCIAS";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #000;
+            color: #fff;
+            font-size: 0.65em;
+            padding: 1px 6px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .pulsera-datos {
+            font-size: 0.85em;
+            line-height: 1.3;
+        }
+
+        .pulsera-barcode {
+            text-align: center;
+            border-left: 2px solid #ccc;
+            padding-left: 15px;
+        }
+
+        .barcode-simulated {
+            font-family: 'Libre Barcode 128', monospace, sans-serif;
+            font-size: 32px;
+            letter-spacing: 4px;
+            font-weight: normal;
+        }
+
+        /* DISEÑO HOJA DE ETIQUETAS DE TRIAJE */
+        .etiquetas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .etiqueta-item {
+            border: 1px solid #444;
+            padding: 8px;
+            border-radius: 4px;
+            background: #fafafa;
+            font-size: 0.78em;
+            font-family: monospace;
+            position: relative;
+        }
+
+        .etiqueta-item header {
+            background: none;
+            color: #000;
+            padding: 0;
+            box-shadow: none;
+            font-weight: bold;
+            font-size: 0.9em;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 4px;
+        }
+
         .toast {
             position: fixed;
             bottom: 20px;
@@ -232,8 +370,21 @@
             border-radius: 6px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: none;
-            z-index: 2000;
+            z-index: 4000;
             font-weight: bold;
+        }
+
+        /* CONFIGURACIÓN DE IMPRESIÓN DIRECTA */
+        @media print {
+            body * { visibility: hidden; }
+            #printable-area, #printable-area * { visibility: visible; }
+            #printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .modal-actions, .no-print { display: none !important; }
         }
     </style>
 </head>
@@ -242,7 +393,7 @@
     <header>
         <div class="header-title">
             <h1 style="margin: 0; font-size: 1.3em;">🏥 Hospital General del Vallès Oriental</h1>
-            <span style="opacity: 0.8; font-size: 0.9em;">| Dashboard de Admisiones</span>
+            <span style="opacity: 0.8; font-size: 0.9em;">| Dashboard de Admisiones y Triaje</span>
         </div>
         <div style="font-size: 0.85em;">
             <strong>Móvil Admisión:</strong> Ext. 4021 | <strong>Operador:</strong> Aleix (ADM-04)
@@ -266,8 +417,8 @@
                 <div class="kpi-value" id="kpi-criticos">3</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Justificantes Emitidos</div>
-                <div class="kpi-value" id="kpi-justificantes">18</div>
+                <div class="kpi-title">Pulseras Impresas</div>
+                <div class="kpi-value" id="kpi-pulseras">42</div>
             </div>
         </div>
 
@@ -364,11 +515,18 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="est-alergias">Alertas Sanitarias / Alergias Conocidas:</label>
+                            <input type="text" id="est-alergias" placeholder="Ej. Alergia a la Penicilina / Riesgo de caídas / Ninguna conocida">
+                        </div>
+
+                        <div class="form-group">
                             <label for="est-motivo">Motivo Principal de Consulta (Relato del paciente):</label>
                             <textarea id="est-motivo" rows="2" placeholder="Ej. Dolor torácico de 2 horas de evolución, fiebre alta, traumatismo en tobillo..." required></textarea>
                         </div>
 
-                        <button type="submit" class="btn-submit">📋 Registrar Admisión y Enviar a Triaje</button>
+                        <button type="submit" class="btn-submit">
+                            <span>📋 Registrar Admisión, Generar Pulsera y Etiquetas</span>
+                        </button>
                     </form>
 
                     <!-- 2. PACIENTE INDOCUMENTADO -->
@@ -400,7 +558,7 @@
                             <label for="anon-rasgos">Rasgos Físicos / Indumentaria:</label>
                             <textarea id="anon-rasgos" rows="2" placeholder="Vestimenta, tatuajes, señas particulares..."></textarea>
                         </div>
-                        <button type="submit" class="btn-submit" style="background-color: var(--danger-red);">🚨 Alta de Paciente Anónimo (Pase Directo)</button>
+                        <button type="submit" class="btn-submit" style="background-color: var(--danger-red);">🚨 Alta Paciente Anónimo + Generar Pulsera Roja</button>
                     </form>
 
                     <!-- 3. TRÁFICO / MUTUA -->
@@ -429,7 +587,7 @@
                             <label for="traf-motivo">Mecanismo del Traumatismo:</label>
                             <textarea id="traf-motivo" rows="2" placeholder="Impacto posterior, caída de motocicleta..." required></textarea>
                         </div>
-                        <button type="submit" class="btn-submit" style="background-color: var(--warning-orange);">🚘 Registrar Entrada por Tráfico / Mutua</button>
+                        <button type="submit" class="btn-submit" style="background-color: var(--warning-orange);">🚘 Registrar Tráfico + Pulsera / Etiquetas</button>
                     </form>
 
                     <!-- 4. EMISIÓN DE JUSTIFICANTE -->
@@ -467,27 +625,36 @@
                                 <th>Hora</th>
                                 <th>Paciente / Código</th>
                                 <th>Tipo</th>
-                                <th>Estado</th>
+                                <th>Acción</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-admisiones">
                             <tr>
                                 <td>12:02</td>
-                                <td>GARCÍA, M. (CatSalut)</td>
+                                <td>GARCÍA PÉREZ, M.</td>
                                 <td>Estándar</td>
-                                <td><span class="status-pill pill-espera">En espera</span></td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="reimprimirModal('GARCÍA PÉREZ, M.', 'BCN9012345678', '12:02', 'Sin alergias')">🪪 Pulsera</button>
+                                    <button class="btn-action-sm" onclick="reimprimirEtiquetasModal('GARCÍA PÉREZ, M.', 'BCN9012345678')">🏷️ Etiquetas</button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>11:50</td>
                                 <td>NN-2026-088</td>
                                 <td>Anónimo</td>
-                                <td><span class="status-pill pill-critico">Directo Box</span></td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="reimprimirModal('PACIENTE ANÓNIMO (NN-088)', 'NN-2026-088', '11:50', 'ALERTA: INDOCUMENTADO')">🪪 Pulsera</button>
+                                    <button class="btn-action-sm" onclick="reimprimirEtiquetasModal('PACIENTE ANÓNIMO (NN-088)', 'NN-2026-088')">🏷️ Etiquetas</button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>11:35</td>
-                                <td>RODRÍGUEZ, L. (Mutua)</td>
+                                <td>RODRÍGUEZ LÓPEZ, L.</td>
                                 <td>Tráfico</td>
-                                <td><span class="status-pill pill-triado">Triado</span></td>
+                                <td>
+                                    <button class="btn-action-sm" onclick="reimprimirModal('RODRÍGUEZ LÓPEZ, L.', 'TR-440192', '11:35', 'Alergia LÁTEX')">🪪 Pulsera</button>
+                                    <button class="btn-action-sm" onclick="reimprimirEtiquetasModal('RODRÍGUEZ LÓPEZ, L.', 'TR-440192')">🏷️ Etiquetas</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -536,6 +703,46 @@
 
     </div>
 
+    <!-- MODAL DE IMPRESIÓN (PULSERA Y ETIQUETAS DE TRIAJE) -->
+    <div id="modal-impresion" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin: 0;">🖨️ Impresión de Identificación de Paciente (Urgencias)</h3>
+                <button onclick="cerrarModal()" style="border: none; background: none; font-size: 1.5em; cursor: pointer;">&times;</button>
+            </div>
+
+            <div id="printable-area">
+                <h4 style="margin: 5px 0; color: #555;">1. Pulsera Térmica de Seguridad (Urgencias):</h4>
+                
+                <div class="pulsera-container">
+                    <div class="pulsera-banda">
+                        <div class="pulsera-datos">
+                            <strong id="p-nombre" style="font-size: 1.1em;">PACIENTE EJEMPLO</strong><br>
+                            <span>CIP/NHC: <strong id="p-cip">1234567890</strong></span> | <span>F.Nac: <span id="p-fnac">01/01/1980</span></span><br>
+                            <span>Entrada: <span id="p-hora">12:00</span> - H.G. Vallès Oriental</span><br>
+                            <span style="color: var(--danger-red); font-weight: bold;" id="p-alergia">ALERTAS: Sin Alergias</span>
+                        </div>
+                        <div class="pulsera-barcode">
+                            <div class="barcode-simulated">||||| | ||||| || |||</div>
+                            <span id="p-barcode-num" style="font-size: 0.7em;">*2026-URG-8901*</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 style="margin: 15px 0 5px 0; color: #555;">2. Hoja de Etiquetas Adhesivas para Triaje / Analíticas (Pliego 6x):</h4>
+                
+                <div class="etiquetas-grid" id="grid-etiquetas">
+                    <!-- Se generan dinámicamente -->
+                </div>
+            </div>
+
+            <div class="modal-actions" style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn-action-sm" style="padding: 10px 18px; background: #666; color: white;" onclick="cerrarModal()">Cerrar</button>
+                <button class="btn-action-sm" style="padding: 10px 18px; background: var(--primary-blue); color: white;" onclick="window.print()">🖨️ Imprimir Todo a Impresora Térmica / Etiquetas</button>
+            </div>
+        </div>
+    </div>
+
     <div id="toast" class="toast">✅ Registro guardado correctamente</div>
 
     <script>
@@ -555,52 +762,106 @@
             const ahora = new Date();
             const horaStr = ahora.getHours().toString().padStart(2, '0') + ':' + ahora.getMinutes().toString().padStart(2, '0');
             
-            let identificador = "";
-            let pillClase = "pill-espera";
-            let estadoTexto = "En espera";
+            let nombreCompleto = "";
+            let cipNhc = "";
+            let fechaNac = "";
+            let alergias = "";
 
             if (tipo === 'Estándar') {
                 const nombre = document.getElementById('est-nombre').value;
                 const ap1 = document.getElementById('est-apellido1').value;
-                identificador = `${ap1.toUpperCase()}, ${nombre.charAt(0)}.`;
+                const ap2 = document.getElementById('est-apellido2').value;
+                nombreCompleto = `${ap1.toUpperCase()} ${ap2.toUpperCase()}, ${nombre.toUpperCase()}`;
+                cipNhc = document.getElementById('est-cip').value || "CAT-SALUT-PENDIENTE";
+                fechaNac = document.getElementById('est-fecha').value || "N/D";
+                alergias = document.getElementById('est-alergias').value || "Ninguna registrada";
             } else if (tipo === 'Anónimo') {
-                identificador = document.getElementById('anon-codigo').value;
-                pillClase = "pill-critico";
-                estadoTexto = "Directo Box";
-                
+                cipNhc = document.getElementById('anon-codigo').value;
+                nombreCompleto = `PACIENTE DESCONOCIDO (${cipNhc})`;
+                fechaNac = document.getElementById('anon-edad').value || "Estimada";
+                alergias = "⚠️ ALERTA: PACIENTE NO IDENTIFICADO";
+
                 const kpiCriticos = document.getElementById('kpi-criticos');
                 kpiCriticos.textContent = parseInt(kpiCriticos.textContent) + 1;
 
                 contadorAnonimos++;
                 document.getElementById('anon-codigo').value = `NN-2026-0${contadorAnonimos}`;
             } else if (tipo === 'Tráfico / Mutua') {
-                identificador = "PACIENTE TRÁFICO / MUTUA";
+                cipNhc = document.getElementById('traf-dni').value;
+                nombreCompleto = `ACCIDENTADO TRÁFICO / ${document.getElementById('traf-mutua').value.toUpperCase()}`;
+                fechaNac = "N/D";
+                alergias = "Atención Traumatología";
             }
 
+            // Actualizar Tabla
             const tabla = document.getElementById('tabla-admisiones');
             const nuevaFila = document.createElement('tr');
             nuevaFila.innerHTML = `
                 <td><strong>${horaStr}</strong></td>
-                <td>${identificador}</td>
+                <td>${nombreCompleto}</td>
                 <td>${tipo}</td>
-                <td><span class="status-pill ${pillClase}">${estadoTexto}</span></td>
+                <td>
+                    <button class="btn-action-sm" onclick="reimprimirModal('${nombreCompleto}', '${cipNhc}', '${horaStr}', '${alergias}')">🪪 Pulsera</button>
+                    <button class="btn-action-sm" onclick="reimprimirEtiquetasModal('${nombreCompleto}', '${cipNhc}')">🏷️ Etiquetas</button>
+                </td>
             `;
             tabla.prepend(nuevaFila);
 
+            // Actualizar KPIs
             const kpiTotal = document.getElementById('kpi-total');
             const kpiEspera = document.getElementById('kpi-espera');
+            const kpiPulseras = document.getElementById('kpi-pulseras');
+
             kpiTotal.textContent = parseInt(kpiTotal.textContent) + 1;
+            kpiPulseras.textContent = parseInt(kpiPulseras.textContent) + 1;
+
             if (tipo !== 'Anónimo') {
                 kpiEspera.textContent = parseInt(kpiEspera.textContent) + 1;
             }
 
+            // Abrir vista previa de la pulsera y etiquetas creadas
+            abrirModalImpresion(nombreCompleto, cipNhc, fechaNac, horaStr, alergias);
+
             event.target.reset();
-            mostrarToast("✅ Registro de " + tipo + " completado con éxito");
+            mostrarToast("✅ Registro completado. Pulsera y etiquetas generadas.");
         }
 
-        function incrementarJustificantes() {
-            const kpi = document.getElementById('kpi-justificantes');
-            kpi.textContent = parseInt(kpi.textContent) + 1;
+        function abrirModalImpresion(nombre, cip, fnac, hora, alergia) {
+            document.getElementById('p-nombre').textContent = nombre;
+            document.getElementById('p-cip').textContent = cip;
+            document.getElementById('p-fnac').textContent = fnac;
+            document.getElementById('p-hora').textContent = hora;
+            document.getElementById('p-alergia').textContent = "ALERTAS: " + alergia;
+            document.getElementById('p-barcode-num').textContent = `*${cip}-${hora.replace(':','')}`;
+
+            // Generar 6 etiquetas adhesivas de muestra
+            const gridEtiquetas = document.getElementById('grid-etiquetas');
+            gridEtiquetas.innerHTML = "";
+            for (let i = 1; i <= 6; i++) {
+                gridEtiquetas.innerHTML += `
+                    <div class="etiqueta-item">
+                        <header>HGVO - TRIAJE URGENCIAS (#${i})</header>
+                        <strong>${nombre.substring(0, 22)}</strong><br>
+                        <span>CIP/NHC: ${cip}</span><br>
+                        <span>FECHA: 07/09/2026 ${hora}</span>
+                        <div style="font-family: monospace; font-size: 1.4em; letter-spacing: 2px; margin-top: 2px;">|||||| |||| |||</div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('modal-impresion').classList.add('active');
+        }
+
+        function reimprimirModal(nombre, cip, hora, alergia) {
+            abrirModalImpresion(nombre, cip, "01/01/1985", hora, alergia);
+        }
+
+        function reimprimirEtiquetasModal(nombre, cip) {
+            abrirModalImpresion(nombre, cip, "01/01/1985", "12:00", "Sin especificar");
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal-impresion').classList.remove('active');
         }
 
         function mostrarToast(mensaje) {
